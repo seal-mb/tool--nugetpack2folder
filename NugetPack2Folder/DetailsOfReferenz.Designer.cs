@@ -63,7 +63,7 @@
             this.comboBoxProbingPath.FormattingEnabled = true;
             this.comboBoxProbingPath.Location = new System.Drawing.Point(97, 53);
             this.comboBoxProbingPath.Name = "comboBoxProbingPath";
-            this.comboBoxProbingPath.Size = new System.Drawing.Size(233, 21);
+            this.comboBoxProbingPath.Size = new System.Drawing.Size(400, 21);
             this.comboBoxProbingPath.TabIndex = 3;
             this.comboBoxProbingPath.Validating += new System.ComponentModel.CancelEventHandler(this.ComboBoxProbingPath_Validating);
             this.comboBoxProbingPath.Validated += new System.EventHandler(this.ComboBoxProbingPath_Validated);
@@ -73,7 +73,7 @@
             this.groupBox1.Controls.Add(this.treeViewElements);
             this.groupBox1.Location = new System.Drawing.Point(20, 136);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(310, 244);
+            this.groupBox1.Size = new System.Drawing.Size(483, 244);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Elemets to move";
@@ -82,7 +82,7 @@
             // 
             this.treeViewElements.Location = new System.Drawing.Point(7, 20);
             this.treeViewElements.Name = "treeViewElements";
-            this.treeViewElements.Size = new System.Drawing.Size(289, 211);
+            this.treeViewElements.Size = new System.Drawing.Size(470, 211);
             this.treeViewElements.TabIndex = 0;
             // 
             // linkLabelPathRef

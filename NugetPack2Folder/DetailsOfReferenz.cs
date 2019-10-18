@@ -48,16 +48,17 @@ namespace NugetPack2Folder
                             prevNode = prevNode.Nodes.Add(e);
                         }
 
-                        prevNode.Collapse(true);
+                        
                     }
                     else
                     {
                         prevNode = node;
                     }
-
+                    
                 }
             }
 
+            treeViewElements.ExpandAll();
         }
 
         public void SetItemData(PrjContentObject itemData, String[] probingData)
