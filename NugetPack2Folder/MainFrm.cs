@@ -58,7 +58,9 @@ namespace NugetPack2Folder
                 Properties.Settings.Default.LastLocation = _theProjectFile.DirectoryName;
                 Properties.Settings.Default.Save();
 
-                var res = _projectFile.Descendants(Helper.GetXName(PTags.Reference)).Where(s => s.Elements( Helper.GetXName(PTags.HintPath)).Any(t => (t.Value?.ToLower().Contains(Helper.SearchNugetPack)).GetValueOrDefault(false)));
+                var res = _projectFile.Descendants(Helper.GetXName(PTags.Reference))
+                                                            .Where(s => s.Elements( Helper.GetXName(PTags.HintPath))
+                                                            .Any(t => (t.Value?.ToLower().Contains(Helper.SearchNugetPack)).GetValueOrDefault(false)));
 
                 toolStripStatusLabelFound.Text = $"Found {res.Count()} items!";
 
@@ -85,7 +87,7 @@ namespace NugetPack2Folder
                         probingValue = Path.GetDirectoryName(existOld.Element(Helper.GetXName(PTags.Link)).Value);
                     }
 
-                    var tagItem = new PrjContentObject(item, _theProjectFile.DirectoryName, probingValue);
+                    var tagItem = new PrjContentObject(item, _theProjectFile.DirectoryName, probingValue) {  OldElement = existOld};
                     if (!lstProjectFiles.Any(s => String.Equals(s.ReferenzPath, tagItem.ReferenzPath, StringComparison.InvariantCultureIgnoreCase)))
                     {
                         var cplocal = item.Element( Helper.GetXName(PTags.Private))?.Value ?? "True";

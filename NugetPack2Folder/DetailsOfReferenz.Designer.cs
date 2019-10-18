@@ -104,7 +104,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.checkBoxAddToOutput);
             this.Name = "DetailsOfReferenz";
-            this.Size = new System.Drawing.Size(871, 553);
+            this.Size = new System.Drawing.Size(529, 404);
             this.Load += new System.EventHandler(this.DetailsOfReferenz_Load);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
