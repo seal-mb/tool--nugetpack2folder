@@ -199,7 +199,6 @@ namespace NugetPack2Folder
                 var linkObj = listViewReferenz.Items.Cast<ListViewItem>().Select( s => s.Tag as PrjContentObject );
                 XElement xGrp = new XElement(Helper.GetXName(PTags.ItemGroup), new XAttribute("Label", "NugetRef"));
                 
-
                 var referenz = _projectFile.Descendants(Helper.GetXName(PTags.Reference)).
                                      Where(s => s.Element(Helper.GetXName(PTags.HintPath)) != null).
                                      Select(s => new { element=s, hintPath = s.Element(Helper.GetXName(PTags.HintPath)).Value });
@@ -210,7 +209,6 @@ namespace NugetPack2Folder
                         continue;
 
                     var content = item.Containers;
-
 
                     var res = from refs in referenz
                               join con in content on refs.hintPath equals con.Attribute("Include").Value
@@ -231,7 +229,6 @@ namespace NugetPack2Folder
                         
                     }
 
-
                     foreach(var element in content)
                     {
                         var old = _projectFile.Descendants(Helper.GetXName(PTags.Content)).FirstOrDefault( 
@@ -249,12 +246,21 @@ namespace NugetPack2Folder
                         }
                     }
 
-                    
                 }
                 
                 if( xGrp.Elements().Any() )
                 {
-                    _projectFile.Root.Add(xGrp);
+                    var x1 = _projectFile.Descendants(Helper.GetXName(PTags.Reference)).Cast<XElement>().FirstOrDefault();
+
+                    if(null != x1)
+                    {
+                        x1.Parent.AddAfterSelf(xGrp);
+                    }
+                    else
+                    {
+                        _projectFile.Root.Add(xGrp);
+                    }
+
                 }
                 
                 _projectFile.Save(_theProjectFile.FullName);
