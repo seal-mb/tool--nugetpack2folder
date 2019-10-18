@@ -58,7 +58,7 @@ namespace NugetPack2Folder
         {
             get
             {
-                return Path.GetDirectoryName(_referenzObject.Element(MainFrm._xmlns + MainFrm.HINTPATH).Value);
+                return Path.GetDirectoryName(_referenzObject.Element( Helper.GetXName(PTags.HintPath)).Value);
             }
         }
 
@@ -151,7 +151,7 @@ namespace NugetPack2Folder
         {
             get
             {
-                var hintPath = _referenzObject.Element(MainFrm._xmlns + MainFrm.HINTPATH).Value;
+                var hintPath = _referenzObject.Element( Helper.GetXName(PTags.HintPath)).Value;
                 var fileName = Path.GetFileName(hintPath);
                 var filePath = Path.GetDirectoryName(hintPath);
 

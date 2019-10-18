@@ -20,9 +20,6 @@ namespace NugetPack2Folder
         private List<XElement> _lstRef = new List<XElement>();
         private FileInfo _theProjectFile = null;
 
-        public const String REFERENCE = "Reference";
-        public const String HINTPATH = "HintPath";
-        public const String PRIVATE = "Private";
         public const String SEARCHNUGETPACK = @"\packages\";
 
         public MainFrm()
@@ -40,7 +37,7 @@ namespace NugetPack2Folder
         private void SetComboBoxText()
         {
             comboBoxProbingVal.Items.Clear();
-            comboBoxProbingVal.Items.AddRange(textBoxProbing.Text.Split(new char[] { ',', ';' }));
+            comboBoxProbingVal.Items.AddRange( Helper.SplitProbing( textBoxProbing.Text));
             comboBoxProbingVal.SelectedIndex = 0;
         }
 
@@ -62,7 +59,7 @@ namespace NugetPack2Folder
                 Properties.Settings.Default.LastLocation = _theProjectFile.DirectoryName;
                 Properties.Settings.Default.Save();
 
-                var res = _projectFile.Descendants(_xmlns + REFERENCE).Where(s => s.Elements(_xmlns + HINTPATH).Any(t => (t.Value?.ToLower().Contains(SEARCHNUGETPACK)).GetValueOrDefault(false)));
+                var res = _projectFile.Descendants(Helper.GetXName(PTags.Reference)).Where(s => s.Elements( Helper.GetXName(PTags.HintPath)).Any(t => (t.Value?.ToLower().Contains(SEARCHNUGETPACK)).GetValueOrDefault(false)));
 
                 toolStripStatusLabelFound.Text = $"Found {res.Count()} items!";
 
@@ -78,7 +75,7 @@ namespace NugetPack2Folder
 
                 foreach (var item in _lstRef)
                 {
-                    var hintPath = item.Element(_xmlns + HINTPATH).Value;
+                    var hintPath = item.Element( Helper.GetXName(PTags.HintPath)).Value;
                     if (String.IsNullOrWhiteSpace(hintPath))
                         continue;
                     var probingValue = probing.FirstOrDefault() ?? Properties.Resources.DefaultSubdirName;
@@ -92,7 +89,7 @@ namespace NugetPack2Folder
                     var tagItem = new PrjContentObject(item, _theProjectFile.DirectoryName, probingValue);
                     if (!lstProjectFiles.Any(s => String.Equals(s.ReferenzPath, tagItem.ReferenzPath, StringComparison.InvariantCultureIgnoreCase)))
                     {
-                        var cplocal = item.Element(_xmlns + PRIVATE)?.Value ?? "True";
+                        var cplocal = item.Element( Helper.GetXName(PTags.Private))?.Value ?? "True";
 
                         var modulename = Path.GetFileName(hintPath);
                         var lstItemVal = new ListViewItem(new String[] { modulename, cplocal });

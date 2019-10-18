@@ -28,7 +28,7 @@ namespace NugetPack2Folder
             if (null == _itemData)
                 return;
 
-            var elements = _itemData.Containers.Select(s => s.Element(MainFrm._xmlns + "Link").Value).Select(s => new { full = s, split = s.Split('\\') });
+            var elements = _itemData.Containers.Select(s => s.Element( Helper.GetXName("Link") ).Value).Select(s => new { full = s, split = s.Split('\\') });
 
             foreach (var element in elements)
             {
@@ -108,7 +108,7 @@ namespace NugetPack2Folder
                 if(null != txt)
                 {
                     comboBoxProbingPath.Items.Clear();
-                    var items = (txt.Text.Split(new char[] { ',', ';' }).Select(s => s.Trim())).ToArray();
+                    var items = Helper.SplitProbing(txt.Text);
                     comboBoxProbingPath.Items.AddRange(items);
                 }
             }
