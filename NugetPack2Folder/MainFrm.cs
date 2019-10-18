@@ -51,62 +51,70 @@ namespace NugetPack2Folder
 
             if (fileDialog.ShowDialog(this) == DialogResult.OK)
             {
-                _projectFile = XDocument.Load(fileDialog.FileName, LoadOptions.None);
-                _theProjectFile = new FileInfo(fileDialog.FileName);
-                Properties.Settings.Default.LastLocation = _theProjectFile.DirectoryName;
-                Properties.Settings.Default.Save();
+                var fiName = fileDialog.FileName;
 
-                var res = _projectFile.Descendants(Helper.GetXName(PTags.Reference))
-                                                            .Where(s => s.Elements( Helper.GetXName(PTags.HintPath))
-                                                            .Any(t => (t.Value?.ToLower().Contains(Helper.SearchNugetPack)).GetValueOrDefault(false)));
+                SetupDialogData(fiName);
+            }
+        }
 
-                toolStripStatusLabelFound.Text = $"Found {res.Count()} items!";
+        private void SetupDialogData(string fiName)
+        {
 
-                _lstRef.Clear();
-                _lstRef.AddRange(res);
+            _projectFile = XDocument.Load(fiName, LoadOptions.None);
+            _theProjectFile = new FileInfo(fiName);
+            Properties.Settings.Default.LastLocation = _theProjectFile.DirectoryName;
+            Properties.Settings.Default.Save();
 
-                listViewReferenz.Items.Clear();
-                detailsOfReferenz.Visible = false;
-                var probing = textBoxProbing.Text.Split(new char[] { ';', ',' });
-                var lstProjectFiles = new List<PrjContentObject>();
+            var res = _projectFile.Descendants(Helper.GetXName(PTags.Reference))
+                                                        .Where(s => s.Elements(Helper.GetXName(PTags.HintPath))
+                                                        .Any(t => (t.Value?.ToLower().Contains(Helper.SearchNugetPack)).GetValueOrDefault(false)));
 
-                var existingContent = _projectFile.Descendants( Helper.GetXName(PTags.Content)).Where(s => s.Element(Helper.GetXName(PTags.Link))?.Value != null);
+            toolStripStatusLabelFound.Text = $"Found {res.Count()} items!";
 
-                foreach (var item in _lstRef)
+            _lstRef.Clear();
+            _lstRef.AddRange(res);
+
+            listViewReferenz.Items.Clear();
+            detailsOfReferenz.Visible = false;
+            var probing = textBoxProbing.Text.Split(new char[] { ';', ',' });
+            var lstProjectFiles = new List<PrjContentObject>();
+
+            var existingContent = _projectFile.Descendants(Helper.GetXName(PTags.Content)).Where(s => s.Element(Helper.GetXName(PTags.Link))?.Value != null);
+
+            foreach (var item in _lstRef)
+            {
+                var hintPath = item.Element(Helper.GetXName(PTags.HintPath)).Value;
+                if (String.IsNullOrWhiteSpace(hintPath))
+                    continue;
+                var probingValue = probing.FirstOrDefault() ?? Properties.Resources.DefaultSubdirName;
+                var existOld = existingContent.FirstOrDefault(s => String.Equals(s.Attribute("Include").Value, hintPath, StringComparison.InvariantCultureIgnoreCase));
+
+                if (null != existOld)
                 {
-                    var hintPath = item.Element( Helper.GetXName(PTags.HintPath)).Value;
-                    if (String.IsNullOrWhiteSpace(hintPath))
-                        continue;
-                    var probingValue = probing.FirstOrDefault() ?? Properties.Resources.DefaultSubdirName;
-                    var existOld = existingContent.FirstOrDefault(s => String.Equals(s.Attribute("Include").Value, hintPath, StringComparison.InvariantCultureIgnoreCase));
-
-                    if (null != existOld)
-                    {
-                        probingValue = Path.GetDirectoryName(existOld.Element(Helper.GetXName(PTags.Link)).Value);
-                    }
-
-                    var tagItem = new PrjContentObject(item, _theProjectFile.DirectoryName, probingValue) {  OldElement = existOld};
-                    if (!lstProjectFiles.Any(s => String.Equals(s.ReferenzPath, tagItem.ReferenzPath, StringComparison.InvariantCultureIgnoreCase)))
-                    {
-                        var cplocal = item.Element( Helper.GetXName(PTags.Private))?.Value ?? "True";
-
-                        var modulename = Path.GetFileName(hintPath);
-                        var lstItemVal = new ListViewItem(new String[] { modulename, cplocal });
-
-                        lstItemVal.Checked = Boolean.Parse(cplocal);
-
-                        var lstitem = listViewReferenz.Items.Add(lstItemVal);
-
-                        lstitem.Tag = tagItem;
-                        lstitem.ToolTipText = $"Hintpath is {tagItem.ReferenzPath}";
-                        lstProjectFiles.Add(tagItem);
-                    }
-
+                    probingValue = Path.GetDirectoryName(existOld.Element(Helper.GetXName(PTags.Link)).Value);
                 }
 
-                listViewReferenz.View = View.Details;
-                this.toolStripMenuItemSave.Enabled = listViewReferenz.Items.Count > 0;
+                var tagItem = new PrjContentObject(item, _theProjectFile.DirectoryName, probingValue) { OldElement = existOld };
+                if (!lstProjectFiles.Any(s => String.Equals(s.ReferenzPath, tagItem.ReferenzPath, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    var cplocal = item.Element(Helper.GetXName(PTags.Private))?.Value ?? "True";
+
+                    var modulename = Path.GetFileName(hintPath);
+                    var lstItemVal = new ListViewItem(new String[] { modulename, cplocal });
+
+                    lstItemVal.Checked = Boolean.Parse(cplocal);
+
+                    var lstitem = listViewReferenz.Items.Add(lstItemVal);
+
+                    lstitem.Tag = tagItem;
+                    lstitem.ToolTipText = $"Hintpath is {tagItem.ReferenzPath}";
+                    lstProjectFiles.Add(tagItem);
+                }
+
             }
+
+            listViewReferenz.View = View.Details;
+            this.toolStripMenuItemSave.Enabled = listViewReferenz.Items.Count > 0;
         }
 
         private void ListViewReferenz_ItemChecked(object sender, ItemCheckedEventArgs e)
@@ -250,6 +258,8 @@ namespace NugetPack2Folder
                 }
                 
                 _projectFile.Save(_theProjectFile.FullName);
+
+                SetupDialogData(_theProjectFile.FullName);
 
             }
         }
