@@ -10,6 +10,12 @@ using System.Xml.Linq;
 
 namespace NugetPack2Folder
 {
+    public enum CopyOption
+    {
+        Always,
+        PreserveNewest
+    };
+
     public class PrjContentObject : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -130,7 +136,7 @@ namespace NugetPack2Folder
                         yield return new XElement(Helper.GetXName(PTags.Content),
                                         new XAttribute("Include", item2.Item1),
                                         new XElement(Helper.GetXName(PTags.Link)) { Value = pa },
-                                        new XElement(Helper.GetXName(PTags.CopyToOutputDirectory)) { Value = "Always" });
+                                        new XElement(Helper.GetXName(PTags.CopyToOutputDirectory)) { Value = CopyOption.PreserveNewest.ToString() });
 
                     }
                 }

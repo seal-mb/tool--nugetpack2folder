@@ -46,6 +46,7 @@
             this.columnHeaderPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderCopy = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.detailsOfReferenz = new NugetPack2Folder.DetailsOfReferenz();
+            this.toolStripMenuItemSave = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
@@ -72,6 +73,7 @@
             // 
             this.dateiToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openProjectFileToolStripMenuItem,
+            this.toolStripMenuItemSave,
             this.toolStripSeparator1,
             this.quitMenuItem});
             this.dateiToolStripMenuItem.Name = "dateiToolStripMenuItem";
@@ -81,19 +83,19 @@
             // openProjectFileToolStripMenuItem
             // 
             this.openProjectFileToolStripMenuItem.Name = "openProjectFileToolStripMenuItem";
-            this.openProjectFileToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.openProjectFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openProjectFileToolStripMenuItem.Text = "Open Project File";
             this.openProjectFileToolStripMenuItem.Click += new System.EventHandler(this.OpenProjectFileToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(161, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // quitMenuItem
             // 
             this.quitMenuItem.Name = "quitMenuItem";
-            this.quitMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.quitMenuItem.Size = new System.Drawing.Size(180, 22);
             this.quitMenuItem.Text = "&Quit";
             // 
             // statusStrip1
@@ -229,6 +231,14 @@
             this.detailsOfReferenz.TabIndex = 0;
             this.detailsOfReferenz.Visible = false;
             // 
+            // toolStripMenuItemSave
+            // 
+            this.toolStripMenuItemSave.Enabled = false;
+            this.toolStripMenuItemSave.Name = "toolStripMenuItemSave";
+            this.toolStripMenuItemSave.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemSave.Text = "&Save";
+            this.toolStripMenuItemSave.Click += new System.EventHandler(this.ToolStripMenuItemSave_Click);
+            // 
             // MainFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -278,6 +288,7 @@
         private DetailsOfReferenz detailsOfReferenz;
         private System.Windows.Forms.ComboBox comboBoxProbingVal;
         private System.Windows.Forms.Button buttonSetProbing;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSave;
     }
 }
 

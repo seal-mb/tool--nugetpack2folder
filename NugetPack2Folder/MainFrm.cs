@@ -19,8 +19,6 @@ namespace NugetPack2Folder
         private List<XElement> _lstRef = new List<XElement>();
         private FileInfo _theProjectFile = null;
 
-        
-
         public MainFrm()
         {
             InitializeComponent();
@@ -107,6 +105,7 @@ namespace NugetPack2Folder
                 }
 
                 listViewReferenz.View = View.Details;
+                this.toolStripMenuItemSave.Enabled = listViewReferenz.Items.Count > 0;
             }
         }
 
@@ -175,6 +174,83 @@ namespace NugetPack2Folder
                 {
                     content.ProbingPath = comboBoxProbingVal.Text;
                 }
+            }
+        }
+
+        private void ToolStripMenuItemSave_Click(object sender, EventArgs e)
+        {
+            if(null != _theProjectFile)
+            {
+                var n = Path.GetFileNameWithoutExtension(_theProjectFile.FullName);
+                var ext = Path.GetExtension(_theProjectFile.FullName);
+
+                var cpName = String.Format("{0}_{1}{2}",n,DateTime.Now.ToString("yyyy-MM-dd_HH#mm#ss"),ext);
+                var cpOut = Path.Combine(_theProjectFile.DirectoryName, cpName);
+                _theProjectFile.CopyTo(cpOut);
+
+                var linkObj = listViewReferenz.Items.Cast<ListViewItem>().Select( s => s.Tag as PrjContentObject );
+                XElement xGrp = new XElement(Helper.GetXName(PTags.ItemGroup), new XAttribute("Label", "NugetRef"));
+                
+
+                var referenz = _projectFile.Descendants(Helper.GetXName(PTags.Reference)).
+                                     Where(s => s.Element(Helper.GetXName(PTags.HintPath)) != null).
+                                     Select(s => new { element=s, hintPath = s.Element(Helper.GetXName(PTags.HintPath)).Value });
+
+                foreach ( var item in linkObj )
+                {
+                    if (item.AddToOutput == false)
+                        continue;
+
+                    var content = item.Containers;
+
+
+                    var res = from refs in referenz
+                              join con in content on refs.hintPath equals con.Attribute("Include").Value
+                              select refs.element;
+
+                    foreach(var item2 in res)
+                    {
+                        var ePrivate = item2.Element(Helper.GetXName(PTags.Private));
+
+                        if (null == ePrivate)
+                        {
+                            item2.Add(new XElement(Helper.GetXName(PTags.Private)) { Value = "False" });
+                        }
+                        else
+                        {
+                            ePrivate.Value = "False";
+                        }
+                        
+                    }
+
+
+                    foreach(var element in content)
+                    {
+                        var old = _projectFile.Descendants(Helper.GetXName(PTags.Content)).FirstOrDefault( 
+                            s => String.Equals(s.Attribute("Include").Value,element.Attribute("Include").Value,StringComparison.InvariantCultureIgnoreCase) );
+
+                        if(null!=old)
+                        {
+                            old.AddAfterSelf(element);
+                            old.Remove();
+                        }
+                        else
+                        {
+                            xGrp.Add(element);
+                            
+                        }
+                    }
+
+                    
+                }
+                
+                if( xGrp.Elements().Any() )
+                {
+                    _projectFile.Root.Add(xGrp);
+                }
+                
+                _projectFile.Save(_theProjectFile.FullName);
+
             }
         }
     }
