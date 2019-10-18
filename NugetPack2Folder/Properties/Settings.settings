@@ -8,5 +8,8 @@
     <Setting Name="DefaultAddIn" Type="System.String" Scope="User">
       <Value Profile="(Default)">addin</Value>
     </Setting>
+    <Setting Name="NugetKenner" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\packages\</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

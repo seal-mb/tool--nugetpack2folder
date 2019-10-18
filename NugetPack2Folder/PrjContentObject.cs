@@ -184,10 +184,10 @@ namespace NugetPack2Folder
                     {
                         var pa = Path.Combine(this.ProbingPath + sub, Path.GetFileName(item2.Item1));
 
-                        yield return new XElement(MainFrm._xmlns + "Content",
+                        yield return new XElement(Helper.GetXName(PTags.Content),
                                         new XAttribute("Include", item2.Item1),
-                                        new XElement(MainFrm._xmlns + "Link") { Value = pa },
-                                        new XElement(MainFrm._xmlns + "CopyToOutputDirectory") { Value = "Always" });
+                                        new XElement(Helper.GetXName(PTags.Link)) { Value = pa },
+                                        new XElement(Helper.GetXName(PTags.CopyToOutputDirectory)) { Value = "Always" });
 
                     }
                 }

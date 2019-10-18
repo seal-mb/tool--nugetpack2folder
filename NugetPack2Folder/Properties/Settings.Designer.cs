@@ -46,5 +46,14 @@ namespace NugetPack2Folder.Properties {
                 this["DefaultAddIn"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\packages\\")]
+        public string NugetKenner {
+            get {
+                return ((string)(this["NugetKenner"]));
+            }
+        }
     }
 }

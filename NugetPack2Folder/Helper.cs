@@ -46,8 +46,7 @@ namespace NugetPack2Folder
     {
 
         static private XNamespace _xmlns = "http://schemas.microsoft.com/developer/msbuild/2003";
-
-
+        
         static public String[] SplitProbing( String probingString )
         {
             if (String.IsNullOrWhiteSpace(probingString))
@@ -57,6 +56,8 @@ namespace NugetPack2Folder
 
             return result.ToArray();
         }
+
+        static public String SearchNugetPack => Properties.Settings.Default.NugetKenner;
 
         static public XNamespace XMLNS => _xmlns;
         static public XName GetXName(PTags enTag)

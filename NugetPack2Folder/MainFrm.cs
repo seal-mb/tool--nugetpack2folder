@@ -16,11 +16,10 @@ namespace NugetPack2Folder
     public partial class MainFrm : Form
     {
         private XDocument _projectFile = null;
-        static public XNamespace _xmlns = "http://schemas.microsoft.com/developer/msbuild/2003";
         private List<XElement> _lstRef = new List<XElement>();
         private FileInfo _theProjectFile = null;
 
-        public const String SEARCHNUGETPACK = @"\packages\";
+        
 
         public MainFrm()
         {
@@ -59,7 +58,7 @@ namespace NugetPack2Folder
                 Properties.Settings.Default.LastLocation = _theProjectFile.DirectoryName;
                 Properties.Settings.Default.Save();
 
-                var res = _projectFile.Descendants(Helper.GetXName(PTags.Reference)).Where(s => s.Elements( Helper.GetXName(PTags.HintPath)).Any(t => (t.Value?.ToLower().Contains(SEARCHNUGETPACK)).GetValueOrDefault(false)));
+                var res = _projectFile.Descendants(Helper.GetXName(PTags.Reference)).Where(s => s.Elements( Helper.GetXName(PTags.HintPath)).Any(t => (t.Value?.ToLower().Contains(Helper.SearchNugetPack)).GetValueOrDefault(false)));
 
                 toolStripStatusLabelFound.Text = $"Found {res.Count()} items!";
 
@@ -71,7 +70,7 @@ namespace NugetPack2Folder
                 var probing = textBoxProbing.Text.Split(new char[] { ';', ',' });
                 var lstProjectFiles = new List<PrjContentObject>();
 
-                var existingContent = _projectFile.Descendants(_xmlns + "Content").Where(s => s.Element(_xmlns + "Link")?.Value != null);
+                var existingContent = _projectFile.Descendants( Helper.GetXName(PTags.Content)).Where(s => s.Element(Helper.GetXName(PTags.Link))?.Value != null);
 
                 foreach (var item in _lstRef)
                 {
@@ -83,7 +82,7 @@ namespace NugetPack2Folder
 
                     if (null != existOld)
                     {
-                        probingValue = Path.GetDirectoryName(existOld.Element(_xmlns + "Link").Value);
+                        probingValue = Path.GetDirectoryName(existOld.Element(Helper.GetXName(PTags.Link)).Value);
                     }
 
                     var tagItem = new PrjContentObject(item, _theProjectFile.DirectoryName, probingValue);
