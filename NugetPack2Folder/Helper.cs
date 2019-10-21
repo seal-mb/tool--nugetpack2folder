@@ -43,17 +43,27 @@ namespace NugetPack2Folder
         Private,
     }
 
+    internal enum CfgTags
+    {
+        configuration,
+        runtime,
+        assemblyBinding, // "urn:schemas-microsoft-com:asm.v1"
+        probing, // privatePath
+    };
+
     internal class Helper
     {
 
         static private XNamespace _xmlns = "http://schemas.microsoft.com/developer/msbuild/2003";
-        
-        static public String[] SplitProbing( String probingString )
+        static private XNamespace _xmlns_bind = "urn:schemas-microsoft-com:asm.v1";
+
+
+        static public String[] SplitProbing(String probingString)
         {
             if (String.IsNullOrWhiteSpace(probingString))
                 return new string[] { };
 
-            var result = probingString.Split( new char[] { ',', ';' } ).Select( s => s.Trim() ).Where( s => String.IsNullOrWhiteSpace(s) == false );
+            var result = probingString.Split(new char[] { ',', ';' }).Select(s => s.Trim()).Where(s => String.IsNullOrWhiteSpace(s) == false);
 
             return result.ToArray();
         }
@@ -66,7 +76,7 @@ namespace NugetPack2Folder
             return _xmlns + enTag.ToString();
         }
 
-        static public XName GetXName( string name )
+        static public XName GetXName(string name)
         {
             return _xmlns + name;
         }
@@ -129,6 +139,62 @@ namespace NugetPack2Folder
             }
 
             return newPath;
+        }
+
+        static public bool AddProbing(XDocument appCfg, String[] probingVal)
+        {
+            if (null != appCfg && probingVal.Any())
+            {
+                var configElement = appCfg.Element(CfgTags.configuration.ToString());
+                if (null == configElement)
+                    return false;
+
+                var runtimeElement = configElement.Element(CfgTags.runtime.ToString());
+
+                if (null == runtimeElement)
+                {
+                    runtimeElement = new XElement(CfgTags.runtime.ToString());
+                    configElement.Add(runtimeElement);
+                }
+
+                var assemblyBindingElement = runtimeElement.Element(_xmlns_bind + CfgTags.assemblyBinding.ToString());
+
+                if (null == assemblyBindingElement)
+                {
+                    assemblyBindingElement = new XElement(_xmlns_bind + CfgTags.assemblyBinding.ToString());
+                    runtimeElement.Add(assemblyBindingElement);
+                }
+
+                var probingElement = assemblyBindingElement.Element(_xmlns_bind + CfgTags.probing.ToString());
+
+                if (null == probingElement)
+                {
+                    probingElement = new XElement(_xmlns_bind + CfgTags.probing.ToString(), new XAttribute("privatePath", ""));
+                    assemblyBindingElement.Add(probingElement);
+                }
+
+                var probingAttribute = probingElement.Attribute("privatePath");
+                if(null == probingAttribute)
+                {
+                    probingAttribute = new XAttribute("privatePath", "");
+                }
+
+                var lstVals = new List<String>();
+
+                var probingValues = probingAttribute.Value.Split(';');
+
+                var res = probingVal.Where( s => !probingValues.Any( t => String.Equals(t,s,StringComparison.InvariantCultureIgnoreCase)) );
+
+                
+
+                lstVals.AddRange(probingValues);
+                lstVals.AddRange(res);
+
+                probingAttribute.Value = String.Join(";", lstVals.Where(s => !String.IsNullOrWhiteSpace(s)));
+
+            }
+
+            return true;
         }
 
     }

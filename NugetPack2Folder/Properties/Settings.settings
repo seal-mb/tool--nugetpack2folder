@@ -5,7 +5,7 @@
     <Setting Name="LastLocation" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="DefaultAddIn" Type="System.String" Scope="User">
+    <Setting Name="DefaultProbing" Type="System.String" Scope="User">
       <Value Profile="(Default)">addin</Value>
     </Setting>
     <Setting Name="NugetKenner" Type="System.String" Scope="Application">

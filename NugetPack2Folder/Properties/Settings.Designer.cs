@@ -38,12 +38,12 @@ namespace NugetPack2Folder.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("addin")]
-        public string DefaultAddIn {
+        public string DefaultProbing {
             get {
-                return ((string)(this["DefaultAddIn"]));
+                return ((string)(this["DefaultProbing"]));
             }
             set {
-                this["DefaultAddIn"] = value;
+                this["DefaultProbing"] = value;
             }
         }
         

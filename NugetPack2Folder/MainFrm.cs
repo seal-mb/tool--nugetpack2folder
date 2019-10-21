@@ -24,7 +24,7 @@ namespace NugetPack2Folder
             InitializeComponent();
 
             quitMenuItem.Click += delegate (object sender, EventArgs e) { this.Close(); };
-            textBoxProbing.Text = Properties.Settings.Default.DefaultAddIn;
+            textBoxProbing.Text = Properties.Settings.Default.DefaultProbing;
 
             textBoxProbing.TextChanged += detailsOfReferenz.TextBoxProbing_TextChanged;
 
@@ -36,6 +36,9 @@ namespace NugetPack2Folder
             comboBoxProbingVal.Items.Clear();
             comboBoxProbingVal.Items.AddRange( Helper.SplitProbing( textBoxProbing.Text));
             comboBoxProbingVal.SelectedIndex = 0;
+
+            Properties.Settings.Default.DefaultProbing = String.Join(";", Helper.SplitProbing(textBoxProbing.Text));
+            Properties.Settings.Default.Save();
         }
 
         private void OpenProjectFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -196,8 +199,13 @@ namespace NugetPack2Folder
                 var cpOut = Path.Combine(_theProjectFile.DirectoryName, cpName);
                 _theProjectFile.CopyTo(cpOut);
 
-                var linkObj = listViewReferenz.Items.Cast<ListViewItem>().Select( s => s.Tag as PrjContentObject );
+                var linkObj = listViewReferenz.Items.Cast<ListViewItem>().Select( s => s.Tag as PrjContentObject ).Where(s => s.AddToOutput);
+
+                if (!linkObj.Any())
+                    return;
+
                 XElement xGrp = new XElement(Helper.GetXName(PTags.ItemGroup), new XAttribute("Label", "NugetRef"));
+                var hashProbing = new HashSet<String>(StringComparer.InvariantCultureIgnoreCase);
                 
                 var referenz = _projectFile.Descendants(Helper.GetXName(PTags.Reference)).
                                      Where(s => s.Element(Helper.GetXName(PTags.HintPath)) != null).
@@ -209,6 +217,7 @@ namespace NugetPack2Folder
                         continue;
 
                     var content = item.Containers;
+                    hashProbing.Add( item.ProbingPath );
 
                     var res = from refs in referenz
                               join con in content on refs.hintPath equals con.Attribute("Include").Value
@@ -226,7 +235,6 @@ namespace NugetPack2Folder
                         {
                             ePrivate.Value = "False";
                         }
-                        
                     }
 
                     foreach(var element in content)
@@ -242,7 +250,6 @@ namespace NugetPack2Folder
                         else
                         {
                             xGrp.Add(element);
-                            
                         }
                     }
 
@@ -262,8 +269,21 @@ namespace NugetPack2Folder
                     }
 
                 }
+
                 
+
+
+
                 _projectFile.Save(_theProjectFile.FullName);
+
+                var cfgFile =  new FileInfo( Path.Combine(_theProjectFile.DirectoryName, "app.config"));
+
+                if(cfgFile.Exists)
+                {
+                    XDocument xdoc = XDocument.Load(cfgFile.FullName);
+                    Helper.AddProbing(xdoc, hashProbing.ToArray());
+                    xdoc.Save(cfgFile.FullName);
+                }
 
                 SetupDialogData(_theProjectFile.FullName);
 
