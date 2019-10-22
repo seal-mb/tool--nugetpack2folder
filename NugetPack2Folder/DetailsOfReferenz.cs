@@ -48,7 +48,6 @@ namespace NugetPack2Folder
                             prevNode = prevNode.Nodes.Add(e);
                         }
 
-                        
                     }
                     else
                     {
@@ -72,6 +71,7 @@ namespace NugetPack2Folder
 
             checkBoxAddToOutput.DataBindings.Clear();
             comboBoxProbingPath.DataBindings.Clear();
+            comboBoxCpOption.DataBindings.Clear();
             treeViewElements.Nodes.Clear();
             linkLabelPathRef.Text = "";
 
@@ -85,6 +85,8 @@ namespace NugetPack2Folder
             {
                 checkBoxAddToOutput.DataBindings.Add("Checked", itemData, "AddToOutput");
                 comboBoxProbingPath.DataBindings.Add("Text", itemData, "ProbingPath");
+                
+                comboBoxCpOption.DataBindings.Add(new Binding("Text", itemData, "CpOption"));
                 linkLabelPathRef.Text = itemData.NugetPathRef;
                 _itemData.PropertyChanged += ItemData_PropertyChanged;
                 BuildTreeView();
@@ -136,11 +138,6 @@ namespace NugetPack2Folder
             BuildTreeView();
         }
 
-        private void DetailsOfReferenz_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void LinkLabelPathRef_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if(!String.IsNullOrWhiteSpace(linkLabelPathRef.Text))
@@ -148,6 +145,19 @@ namespace NugetPack2Folder
                 ProcessStartInfo start = new ProcessStartInfo() { FileName = "explorer.exe", Arguments = linkLabelPathRef.Text };
 
                 Process.Start(start);
+            }
+        }
+
+        private void ComboBoxCpOption_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(null != _itemData)
+            {
+                CopyOption cpoption;
+
+                if(Enum.TryParse<CopyOption>(comboBoxCpOption.Text,out cpoption))
+                {
+                    _itemData.CpOption = cpoption;
+                }
             }
         }
     }

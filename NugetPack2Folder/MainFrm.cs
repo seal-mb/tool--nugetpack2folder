@@ -98,6 +98,21 @@ namespace NugetPack2Folder
                 }
 
                 var tagItem = new PrjContentObject(item, _theProjectFile.DirectoryName, probingValue) { OldElement = existOld };
+
+                if(null != existOld)
+                {
+                    var cpOption = existOld.Element(Helper.GetXName(PTags.CopyToOutputDirectory))?.Value;
+
+                    if(cpOption!= null)
+                    {
+                        CopyOption opt;
+                        if(Enum.TryParse<CopyOption>(cpOption,out opt))
+                        {
+                            tagItem.CpOption = opt;
+                        }
+                    }
+                }
+
                 if (!lstProjectFiles.Any(s => String.Equals(s.ReferenzPath, tagItem.ReferenzPath, StringComparison.InvariantCultureIgnoreCase)))
                 {
                     var cplocal = item.Element(Helper.GetXName(PTags.Private))?.Value ?? "True";

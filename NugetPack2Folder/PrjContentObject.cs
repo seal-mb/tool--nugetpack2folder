@@ -24,6 +24,7 @@ namespace NugetPack2Folder
         private XElement _referenzObject = null;
         private String _basePath = null;
         private String _probingPath = null;
+        private CopyOption _cpOption = CopyOption.PreserveNewest;
 
         public PrjContentObject(XElement referenzObject, String basePath, string probingPath)
         {
@@ -108,7 +109,15 @@ namespace NugetPack2Folder
         }
 
         [Bindable(true)]
-        public CopyOption CpOption { get; set; } = CopyOption.PreserveNewest;
+        public CopyOption CpOption 
+        { 
+            get => _cpOption; 
+            set
+            {
+                _cpOption = value;
+                DoPropertyChanged("CpOption");
+            }
+        }
 
         [Bindable(false)]
         public XElement OldElement { get; set; } = null;
