@@ -90,7 +90,7 @@ namespace NugetPack2Folder
                 if (String.IsNullOrWhiteSpace(hintPath))
                     continue;
                 var probingValue = probing.FirstOrDefault() ?? Properties.Resources.DefaultSubdirName;
-                var existOld = existingContent.FirstOrDefault(s => String.Equals(s.Attribute("Include").Value, hintPath, StringComparison.InvariantCultureIgnoreCase));
+                var existOld = existingContent.FirstOrDefault(s => String.Equals(s.Attribute(Helper.Attr_Include).Value, hintPath, StringComparison.InvariantCultureIgnoreCase));
 
                 if (null != existOld)
                 {
@@ -188,48 +188,58 @@ namespace NugetPack2Folder
             }
         }
 
-        private void ToolStripMenuItemSave_Click(object sender, EventArgs e)
+        private void SaveData2PrjFile()
         {
-            if(null != _theProjectFile)
+            if (null != _theProjectFile)
             {
-                var n = Path.GetFileNameWithoutExtension(_theProjectFile.FullName);
-                var ext = Path.GetExtension(_theProjectFile.FullName);
-
-                var cpName = String.Format("{0}_{1}{2}",n,DateTime.Now.ToString("yyyy-MM-dd_HH#mm#ss"),ext);
-                var cpOut = Path.Combine(_theProjectFile.DirectoryName, cpName);
-                _theProjectFile.CopyTo(cpOut);
-
-                var linkObj = listViewReferenz.Items.Cast<ListViewItem>().Select( s => s.Tag as PrjContentObject ).Where(s => s.AddToOutput);
+                var linkObj = listViewReferenz.Items.Cast<ListViewItem>().Select(s => s.Tag as PrjContentObject).Where(s => s.AddToOutput);
 
                 if (!linkObj.Any())
                     return;
 
-                XElement xGrp = new XElement(Helper.GetXName(PTags.ItemGroup), new XAttribute("Label", "NugetRef"));
+                Helper.BackUpFile(_theProjectFile);
+
                 var hashProbing = new HashSet<String>(StringComparer.InvariantCultureIgnoreCase);
-                
+                XElement xGrp = _projectFile.Element(Helper.GetXName(PTags.Project))?.Elements().Cast<XElement>().FirstOrDefault(s => s.Name == Helper.GetXName(PTags.ItemGroup) && s.Attribute(Helper.Attr_Label)?.Value == Helper.Attr_Label_Value);
+
+                if (null == xGrp)
+                {
+                    xGrp = new XElement(Helper.GetXName(PTags.ItemGroup), new XAttribute(Helper.Attr_Label, Helper.Attr_Label_Value));
+                    var itemGrp = _projectFile.Descendants(Helper.GetXName(PTags.ItemGroup)).FirstOrDefault();
+                    if(null == itemGrp)
+                    {
+                        _projectFile.Element(Helper.GetXName(PTags.Project)).Add(xGrp);
+                    }
+                    else 
+                    {
+                        itemGrp.AddAfterSelf(xGrp);
+                    }
+                }
+
                 var referenz = _projectFile.Descendants(Helper.GetXName(PTags.Reference)).
                                      Where(s => s.Element(Helper.GetXName(PTags.HintPath)) != null).
-                                     Select(s => new { element=s, hintPath = s.Element(Helper.GetXName(PTags.HintPath)).Value });
+                                     Select(s => new { element = s, hintPath = s.Element(Helper.GetXName(PTags.HintPath)).Value });
 
-                foreach ( var item in linkObj )
+                foreach (var item in linkObj)
                 {
                     if (item.AddToOutput == false)
                         continue;
 
                     var content = item.Containers;
-                    hashProbing.Add( item.ProbingPath );
+                    hashProbing.Add(item.ProbingPath);
 
-                    var res = from refs in referenz
-                              join con in content on refs.hintPath equals con.Attribute("Include").Value
-                              select refs.element;
+                    var ref2ContentElements = from refs in referenz
+                                              join con in content on refs.hintPath equals con.Attribute(Helper.Attr_Include)?.Value
+                                              select new { referenzElement = refs.element, contentElement = con };
 
-                    foreach(var item2 in res)
+                    // Set copy local to false
+                    foreach (var refItem in ref2ContentElements)
                     {
-                        var ePrivate = item2.Element(Helper.GetXName(PTags.Private));
+                        var ePrivate = refItem.referenzElement.Element(Helper.GetXName(PTags.Private));
 
                         if (null == ePrivate)
                         {
-                            item2.Add(new XElement(Helper.GetXName(PTags.Private)) { Value = "False" });
+                            refItem.referenzElement.Add(new XElement(Helper.GetXName(PTags.Private)) { Value = "False" });
                         }
                         else
                         {
@@ -237,49 +247,32 @@ namespace NugetPack2Folder
                         }
                     }
 
-                    foreach(var element in content)
-                    {
-                        var old = _projectFile.Descendants(Helper.GetXName(PTags.Content)).FirstOrDefault( 
-                            s => String.Equals(s.Attribute("Include").Value,element.Attribute("Include").Value,StringComparison.InvariantCultureIgnoreCase) );
+                    var resExistingContent = (from existCont in _projectFile.Descendants(Helper.GetXName(PTags.Content))
+                                             join newCont in content on existCont.Attribute(Helper.Attr_Include)?.Value.ToLower() equals newCont.Attribute(Helper.Attr_Include).Value.ToLower()
+                                             select new { existingElement = existCont, newElement = newCont }).ToArray();
 
-                        if(null!=old)
-                        {
-                            old.AddAfterSelf(element);
-                            old.Remove();
-                        }
-                        else
-                        {
-                            xGrp.Add(element);
-                        }
+                    var resNewContent = content.Where(s => !resExistingContent.Any(t => t.newElement.Attribute(Helper.Attr_Include).Value == s.Attribute(Helper.Attr_Include).Value));
+
+                    foreach (var item2 in resExistingContent)
+                    {
+                        item2.existingElement.AddAfterSelf(item2.newElement);
+                        item2.existingElement.Remove();
+                    }
+
+                    foreach(var item2 in resNewContent)
+                    {
+                        xGrp.Add(item2);
                     }
 
                 }
-                
-                if( xGrp.Elements().Any() )
-                {
-                    var x1 = _projectFile.Descendants(Helper.GetXName(PTags.Reference)).Cast<XElement>().FirstOrDefault();
-
-                    if(null != x1)
-                    {
-                        x1.Parent.AddAfterSelf(xGrp);
-                    }
-                    else
-                    {
-                        _projectFile.Root.Add(xGrp);
-                    }
-
-                }
-
-                
-
-
 
                 _projectFile.Save(_theProjectFile.FullName);
 
-                var cfgFile =  new FileInfo( Path.Combine(_theProjectFile.DirectoryName, "app.config"));
+                var cfgFile = new FileInfo(Path.Combine(_theProjectFile.DirectoryName, "app.config"));
 
-                if(cfgFile.Exists)
+                if (cfgFile.Exists)
                 {
+                    Helper.BackUpFile(cfgFile);
                     XDocument xdoc = XDocument.Load(cfgFile.FullName);
                     Helper.AddProbing(xdoc, hashProbing.ToArray());
                     xdoc.Save(cfgFile.FullName);
@@ -288,6 +281,11 @@ namespace NugetPack2Folder
                 SetupDialogData(_theProjectFile.FullName);
 
             }
+        }
+
+        private void ToolStripMenuItemSave_Click(object sender, EventArgs e)
+        {
+            SaveData2PrjFile();
         }
     }
 }

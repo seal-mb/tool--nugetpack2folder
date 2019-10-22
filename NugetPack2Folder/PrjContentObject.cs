@@ -29,7 +29,8 @@ namespace NugetPack2Folder
         {
             _referenzObject = referenzObject;
             _basePath = basePath;
-            _probingPath = probingPath;
+
+            this.ProbingPath = probingPath;
         }
 
         private void DoPropertyChanged(String name)
@@ -54,8 +55,22 @@ namespace NugetPack2Folder
             get => _probingPath;
             set
             {
-                _probingPath = value?.Trim();
-                DoPropertyChanged("ProbingPath");
+                var pvalnew = value?.Trim();
+                var _old = _probingPath;
+
+                if (String.IsNullOrWhiteSpace(pvalnew))
+                    _probingPath = String.Empty;
+                else
+                {
+                    if (pvalnew.StartsWith(@".\"))
+                        _probingPath = pvalnew.Substring(2);
+                    else
+                        _probingPath = pvalnew;
+                }
+                if(_old != _probingPath)
+                {
+                    DoPropertyChanged("ProbingPath");
+                }
             }
         }
 
@@ -64,7 +79,7 @@ namespace NugetPack2Folder
         {
             get
             {
-                return Path.GetDirectoryName(_referenzObject.Element( Helper.GetXName(PTags.HintPath)).Value);
+                return Path.GetDirectoryName(_referenzObject.Element(Helper.GetXName(PTags.HintPath)).Value);
             }
         }
 
@@ -85,27 +100,28 @@ namespace NugetPack2Folder
         [Bindable(false)]
         public String NugetPathRef
         {
-            get 
+            get
             {
-                var x = new DirectoryInfo( Path.Combine(_basePath,ReferenzPath));
+                var x = new DirectoryInfo(Path.Combine(_basePath, ReferenzPath));
                 return new Uri(x.FullName).ToString();
             }
         }
 
+        [Bindable(true)]
+        public CopyOption CpOption { get; set; } = CopyOption.PreserveNewest;
+
         [Bindable(false)]
         public XElement OldElement { get; set; } = null;
-        
 
         public IEnumerable<XElement> Containers
         {
             get
             {
-                var hintPath = _referenzObject.Element( Helper.GetXName(PTags.HintPath)).Value;
+                var hintPath = _referenzObject.Element(Helper.GetXName(PTags.HintPath)).Value;
                 var fileName = Path.GetFileName(hintPath);
                 var filePath = Path.GetDirectoryName(hintPath);
 
                 var lstInclude = new List<Tuple<String, String>>();
-
 
                 lstInclude.Add(new Tuple<string, string>(hintPath, filePath));
                 var moduleDir = new DirectoryInfo(Path.Combine(_basePath, filePath));
@@ -134,13 +150,12 @@ namespace NugetPack2Folder
                         var pa = Path.Combine(this.ProbingPath + sub, Path.GetFileName(item2.Item1));
 
                         yield return new XElement(Helper.GetXName(PTags.Content),
-                                        new XAttribute("Include", item2.Item1),
+                                        new XAttribute(Helper.Attr_Include, item2.Item1),
                                         new XElement(Helper.GetXName(PTags.Link)) { Value = pa },
-                                        new XElement(Helper.GetXName(PTags.CopyToOutputDirectory)) { Value = CopyOption.PreserveNewest.ToString() });
+                                        new XElement(Helper.GetXName(PTags.CopyToOutputDirectory)) { Value = this.CpOption.ToString() });
 
                     }
                 }
-
             }
         }
 

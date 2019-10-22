@@ -57,6 +57,9 @@ namespace NugetPack2Folder
         static private XNamespace _xmlns = "http://schemas.microsoft.com/developer/msbuild/2003";
         static private XNamespace _xmlns_bind = "urn:schemas-microsoft-com:asm.v1";
 
+        public const String Attr_Include = "Include";
+        public const String Attr_Label = "Label";
+        public const String Attr_Label_Value = "NugetRef";
 
         static public String[] SplitProbing(String probingString)
         {
@@ -183,9 +186,8 @@ namespace NugetPack2Folder
 
                 var probingValues = probingAttribute.Value.Split(';');
 
-                var res = probingVal.Where( s => !probingValues.Any( t => String.Equals(t,s,StringComparison.InvariantCultureIgnoreCase)) );
 
-                
+                var res = probingVal.Where( s => !probingValues.Any( t => Helper.ProbingPathCompare(t,s)));
 
                 lstVals.AddRange(probingValues);
                 lstVals.AddRange(res);
@@ -195,6 +197,33 @@ namespace NugetPack2Folder
             }
 
             return true;
+        }
+
+        private static bool ProbingPathCompare( String val1, String val2 )
+        {
+            var check = new String[] { val1 ?? "", val2 ?? "" };
+
+            if (!check[0].StartsWith(@".\", StringComparison.InvariantCultureIgnoreCase))
+                check[0] = @".\" + check[0];
+            if (!check[1].StartsWith(@".\", StringComparison.InvariantCultureIgnoreCase))
+                check[1] = @".\" + check[1];
+
+            return String.Equals(check[0], check[1], StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        public static void BackUpFile(FileInfo backupFile)
+        {
+            if (null == backupFile || !backupFile.Exists)
+                return;
+
+            var nameOfFile = Path.GetFileNameWithoutExtension(backupFile.FullName);
+            var extensionOfFile = Path.GetExtension(backupFile.FullName);
+
+            var backupFileName = String.Format("{0}_{1}{2}", nameOfFile, DateTime.Now.ToString("yyyy-MM-dd_HH#mm#ss"), extensionOfFile);
+
+            var copyFileName = Path.Combine(backupFile.DirectoryName, backupFileName);
+
+            backupFile.CopyTo(copyFileName);
         }
 
     }
