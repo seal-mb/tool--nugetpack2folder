@@ -57,6 +57,10 @@
     <Compile Include="DetailsOfReferenz.Designer.cs">
       <DependentUpon>DetailsOfReferenz.cs</DependentUpon>
     </Compile>
+    <Compile Include="DetailsOfReferenz.internals.cs">
+      <SubType>UserControl</SubType>
+      <DependentUpon>DetailsOfReferenz.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helper.cs" />
     <Compile Include="MainFrm.cs">
       <SubType>Form</SubType>
