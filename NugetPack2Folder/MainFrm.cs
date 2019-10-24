@@ -19,11 +19,12 @@ namespace NugetPack2Folder
         private List<XElement> _lstRef = new List<XElement>();
         private FileInfo _theProjectFile = null;
 
-        public MainFrm()
+        public MainFrm ()
         {
             InitializeComponent();
 
-            quitMenuItem.Click += delegate (object sender, EventArgs e) { this.Close(); };
+            quitMenuItem.Click += delegate ( object sender, EventArgs e )
+            { this.Close(); };
             textBoxProbing.Text = Properties.Settings.Default.DefaultProbing;
 
             textBoxProbing.TextChanged += detailsOfReferenz.TextBoxProbing_TextChanged;
@@ -31,7 +32,7 @@ namespace NugetPack2Folder
             SetComboBoxText();
         }
 
-        private void OpenProjectFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenProjectFileToolStripMenuItem_Click ( object sender, EventArgs e )
         {
             var fileDialog = new OpenFileDialog() { Title = "Select project File" };
 
@@ -39,10 +40,10 @@ namespace NugetPack2Folder
             fileDialog.DefaultExt = "csproj";
             fileDialog.Multiselect = false;
             var lastLocation = Properties.Settings.Default.LastLocation;
-            if (String.IsNullOrEmpty(lastLocation) == false && Directory.Exists(lastLocation))
+            if ( String.IsNullOrEmpty(lastLocation) == false && Directory.Exists(lastLocation) )
                 fileDialog.InitialDirectory = Properties.Settings.Default.LastLocation;
 
-            if (fileDialog.ShowDialog(this) == DialogResult.OK)
+            if ( fileDialog.ShowDialog(this) == DialogResult.OK )
             {
                 var fiName = fileDialog.FileName;
 
@@ -50,21 +51,21 @@ namespace NugetPack2Folder
             }
         }
 
-        private void ListViewReferenz_ItemChecked(object sender, ItemCheckedEventArgs e)
+        private void ListViewReferenz_ItemChecked ( object sender, ItemCheckedEventArgs e )
         {
             var item = e.Item;
 
-            if (null != item)
+            if ( null != item )
             {
                 item.SubItems[1].Text = item.Checked.ToString();
             }
         }
 
-        private void ListViewReferenz_SelectedIndexChanged(object sender, EventArgs e)
+        private void ListViewReferenz_SelectedIndexChanged ( object sender, EventArgs e )
         {
             var item = listViewReferenz.SelectedItems.Cast<ListViewItem>().FirstOrDefault();
 
-            if (null != item)
+            if ( null != item )
             {
                 detailsOfReferenz.SetItemData(item.Tag as PrjContentObject, textBoxProbing.Text.Split(new char[] { ';', ',' }));
                 detailsOfReferenz.Visible = true;
@@ -77,11 +78,11 @@ namespace NugetPack2Folder
             }
         }
 
-        private void TextBoxProbing_Validating(object sender, CancelEventArgs e)
+        private void TextBoxProbing_Validating ( object sender, CancelEventArgs e )
         {
             var txt = sender as TextBox;
 
-            if (String.IsNullOrWhiteSpace(txt.Text))
+            if ( String.IsNullOrWhiteSpace(txt.Text) )
             {
                 MessageBox.Show("Textbox darf nicht leer sein", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 e.Cancel = true;
@@ -91,7 +92,7 @@ namespace NugetPack2Folder
             {
                 var items = txt.Text.Split(new char[] { ',', ';' });
 
-                if (items.Any(s => String.IsNullOrWhiteSpace(s)))
+                if ( items.Any(s => String.IsNullOrWhiteSpace(s)) )
                 {
                     MessageBox.Show("Textbox enthält leere elemente", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     e.Cancel = true;
@@ -100,25 +101,25 @@ namespace NugetPack2Folder
 
         }
 
-        private void TextBoxProbing_Validated(object sender, EventArgs e)
+        private void TextBoxProbing_Validated ( object sender, EventArgs e )
         {
             SetComboBoxText();
         }
 
-        private void ButtonSetProbing_Click(object sender, EventArgs e)
+        private void ButtonSetProbing_Click ( object sender, EventArgs e )
         {
-            foreach( var item in listViewReferenz.Items.Cast<ListViewItem>() )
+            foreach ( var item in listViewReferenz.Items.Cast<ListViewItem>() )
             {
                 var content = item.Tag as PrjContentObject;
 
-                if(null != content)
+                if ( null != content )
                 {
                     content.ProbingPath = comboBoxProbingVal.Text;
                 }
             }
         }
 
-        private void ToolStripMenuItemSave_Click(object sender, EventArgs e)
+        private void ToolStripMenuItemSave_Click ( object sender, EventArgs e )
         {
             SaveData2PrjFile();
         }

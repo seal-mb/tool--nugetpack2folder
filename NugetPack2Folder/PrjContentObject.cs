@@ -26,7 +26,7 @@ namespace NugetPack2Folder
         private String _probingPath = null;
         private CopyOption _cpOption = CopyOption.PreserveNewest;
 
-        public PrjContentObject(XElement referenzObject, String basePath, string probingPath)
+        public PrjContentObject ( XElement referenzObject, String basePath, string probingPath )
         {
             _referenzObject = referenzObject;
             _basePath = basePath;
@@ -34,7 +34,7 @@ namespace NugetPack2Folder
             this.ProbingPath = probingPath;
         }
 
-        private void DoPropertyChanged(String name)
+        private void DoPropertyChanged ( String name )
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
@@ -59,16 +59,16 @@ namespace NugetPack2Folder
                 var pvalnew = value?.Trim();
                 var _old = _probingPath;
 
-                if (String.IsNullOrWhiteSpace(pvalnew))
+                if ( String.IsNullOrWhiteSpace(pvalnew) )
                     _probingPath = String.Empty;
                 else
                 {
-                    if (pvalnew.StartsWith(@".\"))
+                    if ( pvalnew.StartsWith(@".\") )
                         _probingPath = pvalnew.Substring(2);
                     else
                         _probingPath = pvalnew;
                 }
-                if(_old != _probingPath)
+                if ( _old != _probingPath )
                 {
                     DoPropertyChanged("ProbingPath");
                 }
@@ -109,9 +109,9 @@ namespace NugetPack2Folder
         }
 
         [Bindable(true)]
-        public CopyOption CpOption 
-        { 
-            get => _cpOption; 
+        public CopyOption CpOption
+        {
+            get => _cpOption;
             set
             {
                 _cpOption = value;
@@ -135,9 +135,9 @@ namespace NugetPack2Folder
                 lstInclude.Add(new Tuple<string, string>(hintPath, filePath));
                 var moduleDir = new DirectoryInfo(Path.Combine(_basePath, filePath));
 
-                foreach (var fi in moduleDir.GetFiles("*", SearchOption.AllDirectories))
+                foreach ( var fi in moduleDir.GetFiles("*", SearchOption.AllDirectories) )
                 {
-                    if (String.Equals(fi.Name, fileName, StringComparison.InvariantCultureIgnoreCase))
+                    if ( String.Equals(fi.Name, fileName, StringComparison.InvariantCultureIgnoreCase) )
                         continue;
 
                     var relPath = Helper.GetRelativePath(_basePath, fi.DirectoryName);
@@ -150,11 +150,11 @@ namespace NugetPack2Folder
                 var resultGrp = lstInclude.OrderBy(s => s.Item2.Length).GroupBy(s => s.Item2);
                 var offest = filePath.Length;
 
-                foreach (var item1 in resultGrp)
+                foreach ( var item1 in resultGrp )
                 {
                     var sub = item1.Key.Substring(offest, item1.Key.Length - offest);
 
-                    foreach (var item2 in item1)
+                    foreach ( var item2 in item1 )
                     {
                         var pa = Path.Combine(this.ProbingPath + sub, Path.GetFileName(item2.Item1));
 

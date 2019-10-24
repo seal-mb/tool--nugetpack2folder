@@ -12,11 +12,11 @@ namespace NugetPack2Folder
     public partial class MainFrm
     {
 
-        private void SetupDialogData(string fiName)
+        private void SetupDialogData ( string fiName )
         {
 
-            _projectFile = XDocument.Load( fiName, LoadOptions.None );
-            _theProjectFile = new FileInfo( fiName );
+            _projectFile = XDocument.Load(fiName, LoadOptions.None);
+            _theProjectFile = new FileInfo(fiName);
             Properties.Settings.Default.LastLocation = _theProjectFile.DirectoryName;
             Properties.Settings.Default.Save();
 
@@ -27,7 +27,7 @@ namespace NugetPack2Folder
             toolStripStatusLabelFound.Text = $"Found {res.Count()} items!";
 
             _lstRef.Clear();
-            _lstRef.AddRange( res );
+            _lstRef.AddRange(res);
 
             listViewReferenz.Items.Clear();
             detailsOfReferenz.Visible = false;
@@ -36,49 +36,49 @@ namespace NugetPack2Folder
 
             var existingContent = _projectFile.Descendants( Helper.GetXName( PTags.Content ) ).Where( s => s.Element( Helper.GetXName( PTags.Link ) )?.Value != null );
 
-            foreach (var item in _lstRef)
+            foreach ( var item in _lstRef )
             {
                 var hintPath = item.Element( Helper.GetXName( PTags.HintPath ) ).Value;
-                if (String.IsNullOrWhiteSpace( hintPath ))
+                if ( String.IsNullOrWhiteSpace(hintPath) )
                     continue;
                 var probingValue = probing.FirstOrDefault() ?? Properties.Resources.DefaultSubdirName;
                 var existOld = existingContent.FirstOrDefault( s => String.Equals( s.Attribute( Helper.Attr_Include ).Value, hintPath, StringComparison.InvariantCultureIgnoreCase ) );
 
-                if (null != existOld)
+                if ( null != existOld )
                 {
-                    probingValue = Path.GetDirectoryName( existOld.Element( Helper.GetXName( PTags.Link ) ).Value );
+                    probingValue = Path.GetDirectoryName(existOld.Element(Helper.GetXName(PTags.Link)).Value);
                 }
 
                 var tagItem = new PrjContentObject( item, _theProjectFile.DirectoryName, probingValue ) { OldElement = existOld };
 
-                if (null != existOld)
+                if ( null != existOld )
                 {
                     var cpOption = existOld.Element( Helper.GetXName( PTags.CopyToOutputDirectory ) )?.Value;
 
-                    if (cpOption != null)
+                    if ( cpOption != null )
                     {
                         CopyOption opt;
-                        if (Enum.TryParse<CopyOption>( cpOption, out opt ))
+                        if ( Enum.TryParse<CopyOption>(cpOption, out opt) )
                         {
                             tagItem.CpOption = opt;
                         }
                     }
                 }
 
-                if (!lstProjectFiles.Any( s => String.Equals( s.ReferenzPath, tagItem.ReferenzPath, StringComparison.InvariantCultureIgnoreCase ) ))
+                if ( !lstProjectFiles.Any(s => String.Equals(s.ReferenzPath, tagItem.ReferenzPath, StringComparison.InvariantCultureIgnoreCase)) )
                 {
                     var cplocal = item.Element( Helper.GetXName( PTags.Private ) )?.Value ?? "True";
 
                     var modulename = Path.GetFileName( hintPath );
                     var lstItemVal = new ListViewItem( new String[] { modulename, cplocal } );
 
-                    lstItemVal.Checked = Boolean.Parse( cplocal );
+                    lstItemVal.Checked = Boolean.Parse(cplocal);
 
                     var lstitem = listViewReferenz.Items.Add( lstItemVal );
 
                     lstitem.Tag = tagItem;
                     lstitem.ToolTipText = $"Hintpath is {tagItem.ReferenzPath}";
-                    lstProjectFiles.Add( tagItem );
+                    lstProjectFiles.Add(tagItem);
                 }
 
             }
@@ -87,31 +87,31 @@ namespace NugetPack2Folder
             this.toolStripMenuItemSave.Enabled = listViewReferenz.Items.Count > 0;
         }
 
-        private void SaveData2PrjFile()
+        private void SaveData2PrjFile ()
         {
-            if (null != _theProjectFile)
+            if ( null != _theProjectFile )
             {
                 var linkObj = listViewReferenz.Items.Cast<ListViewItem>().Select( s => s.Tag as PrjContentObject ).Where( s => s.AddToOutput );
 
-                if (!linkObj.Any())
+                if ( !linkObj.Any() )
                     return;
 
-                Helper.BackUpFile( _theProjectFile );
+                Helper.BackUpFile(_theProjectFile);
 
                 var hashProbing = new HashSet<String>( StringComparer.InvariantCultureIgnoreCase );
                 XElement xGrp = _projectFile.Element( Helper.GetXName( PTags.Project ) )?.Elements().Cast<XElement>().FirstOrDefault( s => s.Name == Helper.GetXName( PTags.ItemGroup ) && s.Attribute( Helper.Attr_Label )?.Value == Helper.Attr_Label_Value );
 
-                if (null == xGrp)
+                if ( null == xGrp )
                 {
-                    xGrp = new XElement( Helper.GetXName( PTags.ItemGroup ), new XAttribute( Helper.Attr_Label, Helper.Attr_Label_Value ) );
+                    xGrp = new XElement(Helper.GetXName(PTags.ItemGroup), new XAttribute(Helper.Attr_Label, Helper.Attr_Label_Value));
                     var itemGrp = _projectFile.Descendants( Helper.GetXName( PTags.ItemGroup ) ).FirstOrDefault();
-                    if (null == itemGrp)
+                    if ( null == itemGrp )
                     {
-                        _projectFile.Element( Helper.GetXName( PTags.Project ) ).Add( xGrp );
+                        _projectFile.Element(Helper.GetXName(PTags.Project)).Add(xGrp);
                     }
                     else
                     {
-                        itemGrp.AddAfterSelf( xGrp );
+                        itemGrp.AddAfterSelf(xGrp);
                     }
                 }
 
@@ -119,26 +119,26 @@ namespace NugetPack2Folder
                                      Where( s => s.Element( Helper.GetXName( PTags.HintPath ) ) != null ).
                                      Select( s => new { element = s, hintPath = s.Element( Helper.GetXName( PTags.HintPath ) ).Value } );
 
-                foreach (var item in linkObj)
+                foreach ( var item in linkObj )
                 {
-                    if (item.AddToOutput == false)
+                    if ( item.AddToOutput == false )
                         continue;
 
                     var content = item.Containers;
-                    hashProbing.Add( item.ProbingPath );
+                    hashProbing.Add(item.ProbingPath);
 
                     var ref2ContentElements = from refs in referenz
                                               join con in content on refs.hintPath equals con.Attribute( Helper.Attr_Include )?.Value
                                               select new { referenzElement = refs.element, contentElement = con };
 
                     // Set copy local to false
-                    foreach (var refItem in ref2ContentElements)
+                    foreach ( var refItem in ref2ContentElements )
                     {
                         var ePrivate = refItem.referenzElement.Element( Helper.GetXName( PTags.Private ) );
 
-                        if (null == ePrivate)
+                        if ( null == ePrivate )
                         {
-                            refItem.referenzElement.Add( new XElement( Helper.GetXName( PTags.Private ) ) { Value = "False" } );
+                            refItem.referenzElement.Add(new XElement(Helper.GetXName(PTags.Private)) { Value = "False" });
                         }
                         else
                         {
@@ -152,43 +152,43 @@ namespace NugetPack2Folder
 
                     var resNewContent = content.Where( s => !resExistingContent.Any( t => t.newElement.Attribute( Helper.Attr_Include ).Value == s.Attribute( Helper.Attr_Include ).Value ) );
 
-                    foreach (var item2 in resExistingContent)
+                    foreach ( var item2 in resExistingContent )
                     {
-                        item2.existingElement.AddAfterSelf( item2.newElement );
+                        item2.existingElement.AddAfterSelf(item2.newElement);
                         item2.existingElement.Remove();
                     }
 
-                    foreach (var item2 in resNewContent)
+                    foreach ( var item2 in resNewContent )
                     {
-                        xGrp.Add( item2 );
+                        xGrp.Add(item2);
                     }
 
                 }
 
-                _projectFile.Save( _theProjectFile.FullName );
+                _projectFile.Save(_theProjectFile.FullName);
 
                 var cfgFile = new FileInfo( Path.Combine( _theProjectFile.DirectoryName, "app.config" ) );
 
-                if (cfgFile.Exists)
+                if ( cfgFile.Exists )
                 {
-                    Helper.BackUpFile( cfgFile );
+                    Helper.BackUpFile(cfgFile);
                     XDocument xdoc = XDocument.Load( cfgFile.FullName );
-                    Helper.AddProbing( xdoc, hashProbing.ToArray() );
-                    xdoc.Save( cfgFile.FullName );
+                    Helper.AddProbing(xdoc, hashProbing.ToArray());
+                    xdoc.Save(cfgFile.FullName);
                 }
 
-                SetupDialogData( _theProjectFile.FullName );
+                SetupDialogData(_theProjectFile.FullName);
 
             }
         }
 
-        private void SetComboBoxText()
+        private void SetComboBoxText ()
         {
             comboBoxProbingVal.Items.Clear();
-            comboBoxProbingVal.Items.AddRange( Helper.SplitProbing( textBoxProbing.Text ) );
+            comboBoxProbingVal.Items.AddRange(Helper.SplitProbing(textBoxProbing.Text));
             comboBoxProbingVal.SelectedIndex = 0;
 
-            Properties.Settings.Default.DefaultProbing = String.Join( ";", Helper.SplitProbing( textBoxProbing.Text ) );
+            Properties.Settings.Default.DefaultProbing = String.Join(";", Helper.SplitProbing(textBoxProbing.Text));
             Properties.Settings.Default.Save();
         }
 
