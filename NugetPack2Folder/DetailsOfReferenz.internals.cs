@@ -18,44 +18,51 @@ namespace NugetPack2Folder
         {
             treeViewElements.Nodes.Clear();
 
-            if ( null == _itemData )
-                return;
-
-            var elements = _itemData.Containers.Select( s => s.Element( Helper.GetXName( PTags.Link) ).Value ).Select( s => new { full = s, split = s.Split( '\\' ) } );
-
-            foreach ( var element in elements )
+            try
             {
-                TreeNode prevNode = null;
-                foreach ( var e in element.split )
-                {
-                    var node = null == prevNode ? treeViewElements.Nodes.Cast<TreeNode>().FirstOrDefault( s => s.Text == e ) : prevNode.Nodes.Cast<TreeNode>().FirstOrDefault( s => s.Text == e );
+                if (null == _itemData)
+                    return;
 
-                    if ( null == node )
+                var elements = _itemData.Containers.Select( s => s.Element( Helper.GetXName( PTags.Link) ).Value ).Select( s => new { full = s, split = s.Split( '\\' ) } );
+
+                foreach (var element in elements)
+                {
+                    TreeNode prevNode = null;
+                    foreach (var e in element.split)
                     {
-                        if ( null == prevNode )
+                        var node = null == prevNode ? treeViewElements.Nodes.Cast<TreeNode>().FirstOrDefault( s => s.Text == e ) : prevNode.Nodes.Cast<TreeNode>().FirstOrDefault( s => s.Text == e );
+
+                        if (null == node)
                         {
-                            prevNode = treeViewElements.Nodes.Add(e);
+                            if (null == prevNode)
+                            {
+                                prevNode = treeViewElements.Nodes.Add(e);
+                            }
+                            else
+                            {
+                                prevNode = prevNode.Nodes.Add(e);
+                            }
+
                         }
                         else
                         {
-                            prevNode = prevNode.Nodes.Add(e);
+                            prevNode = node;
                         }
 
                     }
-                    else
-                    {
-                        prevNode = node;
-                    }
-
                 }
-            }
 
-            treeViewElements.ExpandAll();
+                treeViewElements.ExpandAll();
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show($"Error while build tree. Error {ex.Message}","Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        public void SetItemData ( PrjContentObject itemData, String[] probingData )
+        public void SetItemData (PrjContentObject itemData, String[] probingData)
         {
-            if ( null != _itemData )
+            if (null != _itemData)
             {
                 _itemData.PropertyChanged -= ItemData_PropertyChanged;
             }
@@ -69,12 +76,12 @@ namespace NugetPack2Folder
             linkLabelPathRef.Text = "";
 
             comboBoxProbingPath.Items.Clear();
-            if ( null != probingData )
+            if (null != probingData)
             {
                 comboBoxProbingPath.Items.AddRange(probingData);
             }
 
-            if ( null != _itemData )
+            if (null != _itemData)
             {
                 checkBoxAddToOutput.DataBindings.Add("Checked", itemData, "AddToOutput");
                 comboBoxProbingPath.DataBindings.Add("Text", itemData, "ProbingPath");

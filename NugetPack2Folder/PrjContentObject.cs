@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml.Linq;
 
 namespace NugetPack2Folder
@@ -134,6 +135,12 @@ namespace NugetPack2Folder
 
                 lstInclude.Add(new Tuple<string, string>(hintPath, filePath));
                 var moduleDir = new DirectoryInfo(Path.Combine(_basePath, filePath));
+
+                if(!moduleDir.Exists)
+                {
+                   
+                    throw new DirectoryNotFoundException($"Module Directory {moduleDir.FullName} not found!");
+                }
 
                 foreach ( var fi in moduleDir.GetFiles("*", SearchOption.AllDirectories) )
                 {

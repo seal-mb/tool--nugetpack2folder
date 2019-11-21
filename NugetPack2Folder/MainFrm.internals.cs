@@ -12,7 +12,7 @@ namespace NugetPack2Folder
     public partial class MainFrm
     {
 
-        private void SetupDialogData ( string fiName )
+        private void SetupDialogData (string fiName)
         {
 
             _projectFile = XDocument.Load(fiName, LoadOptions.None);
@@ -36,36 +36,36 @@ namespace NugetPack2Folder
 
             var existingContent = _projectFile.Descendants( Helper.GetXName( PTags.Content ) ).Where( s => s.Element( Helper.GetXName( PTags.Link ) )?.Value != null );
 
-            foreach ( var item in _lstRef )
+            foreach (var item in _lstRef)
             {
                 var hintPath = item.Element( Helper.GetXName( PTags.HintPath ) ).Value;
-                if ( String.IsNullOrWhiteSpace(hintPath) )
+                if (String.IsNullOrWhiteSpace(hintPath))
                     continue;
                 var probingValue = probing.FirstOrDefault() ?? Properties.Resources.DefaultSubdirName;
                 var existOld = existingContent.FirstOrDefault( s => String.Equals( s.Attribute( Helper.Attr_Include ).Value, hintPath, StringComparison.InvariantCultureIgnoreCase ) );
 
-                if ( null != existOld )
+                if (null != existOld)
                 {
                     probingValue = Path.GetDirectoryName(existOld.Element(Helper.GetXName(PTags.Link)).Value);
                 }
 
                 var tagItem = new PrjContentObject( item, _theProjectFile.DirectoryName, probingValue ) { OldElement = existOld };
 
-                if ( null != existOld )
+                if (null != existOld)
                 {
                     var cpOption = existOld.Element( Helper.GetXName( PTags.CopyToOutputDirectory ) )?.Value;
 
-                    if ( cpOption != null )
+                    if (cpOption != null)
                     {
                         CopyOption opt;
-                        if ( Enum.TryParse<CopyOption>(cpOption, out opt) )
+                        if (Enum.TryParse<CopyOption>(cpOption, out opt))
                         {
                             tagItem.CpOption = opt;
                         }
                     }
                 }
 
-                if ( !lstProjectFiles.Any(s => String.Equals(s.ReferenzPath, tagItem.ReferenzPath, StringComparison.InvariantCultureIgnoreCase)) )
+                if (!lstProjectFiles.Any(s => String.Equals(s.ReferenzPath, tagItem.ReferenzPath, StringComparison.InvariantCultureIgnoreCase)))
                 {
                     var cplocal = item.Element( Helper.GetXName( PTags.Private ) )?.Value ?? "True";
 
@@ -89,96 +89,103 @@ namespace NugetPack2Folder
 
         private void SaveData2PrjFile ()
         {
-            if ( null != _theProjectFile )
+            try
             {
-                var linkObj = listViewReferenz.Items.Cast<ListViewItem>().Select( s => s.Tag as PrjContentObject ).Where( s => s.AddToOutput );
-
-                if ( !linkObj.Any() )
-                    return;
-
-                Helper.BackUpFile(_theProjectFile);
-
-                var hashProbing = new HashSet<String>( StringComparer.InvariantCultureIgnoreCase );
-                XElement xGrp = _projectFile.Element( Helper.GetXName( PTags.Project ) )?.Elements().Cast<XElement>().FirstOrDefault( s => s.Name == Helper.GetXName( PTags.ItemGroup ) && s.Attribute( Helper.Attr_Label )?.Value == Helper.Attr_Label_Value );
-
-                if ( null == xGrp )
+                if (null != _theProjectFile)
                 {
-                    xGrp = new XElement(Helper.GetXName(PTags.ItemGroup), new XAttribute(Helper.Attr_Label, Helper.Attr_Label_Value));
-                    var itemGrp = _projectFile.Descendants( Helper.GetXName( PTags.ItemGroup ) ).FirstOrDefault();
-                    if ( null == itemGrp )
+                    var linkObj = listViewReferenz.Items.Cast<ListViewItem>().Select( s => s.Tag as PrjContentObject ).Where( s => s.AddToOutput );
+
+                    if (!linkObj.Any())
+                        return;
+
+                    Helper.BackUpFile(_theProjectFile);
+
+                    var hashProbing = new HashSet<String>( StringComparer.InvariantCultureIgnoreCase );
+                    XElement xGrp = _projectFile.Element( Helper.GetXName( PTags.Project ) )?.Elements().Cast<XElement>().FirstOrDefault( s => s.Name == Helper.GetXName( PTags.ItemGroup ) && s.Attribute( Helper.Attr_Label )?.Value == Helper.Attr_Label_Value );
+
+                    if (null == xGrp)
                     {
-                        _projectFile.Element(Helper.GetXName(PTags.Project)).Add(xGrp);
-                    }
-                    else
-                    {
-                        itemGrp.AddAfterSelf(xGrp);
-                    }
-                }
-
-                var referenz = _projectFile.Descendants( Helper.GetXName( PTags.Reference ) ).
-                                     Where( s => s.Element( Helper.GetXName( PTags.HintPath ) ) != null ).
-                                     Select( s => new { element = s, hintPath = s.Element( Helper.GetXName( PTags.HintPath ) ).Value } );
-
-                foreach ( var item in linkObj )
-                {
-                    if ( item.AddToOutput == false )
-                        continue;
-
-                    var content = item.Containers;
-                    hashProbing.Add(item.ProbingPath);
-
-                    var ref2ContentElements = from refs in referenz
-                                              join con in content on refs.hintPath equals con.Attribute( Helper.Attr_Include )?.Value
-                                              select new { referenzElement = refs.element, contentElement = con };
-
-                    // Set copy local to false
-                    foreach ( var refItem in ref2ContentElements )
-                    {
-                        var ePrivate = refItem.referenzElement.Element( Helper.GetXName( PTags.Private ) );
-
-                        if ( null == ePrivate )
+                        xGrp = new XElement(Helper.GetXName(PTags.ItemGroup), new XAttribute(Helper.Attr_Label, Helper.Attr_Label_Value));
+                        var itemGrp = _projectFile.Descendants( Helper.GetXName( PTags.ItemGroup ) ).FirstOrDefault();
+                        if (null == itemGrp)
                         {
-                            refItem.referenzElement.Add(new XElement(Helper.GetXName(PTags.Private)) { Value = "False" });
+                            _projectFile.Element(Helper.GetXName(PTags.Project)).Add(xGrp);
                         }
                         else
                         {
-                            ePrivate.Value = "False";
+                            itemGrp.AddAfterSelf(xGrp);
                         }
                     }
 
-                    var resExistingContent = (from existCont in _projectFile.Descendants( Helper.GetXName( PTags.Content ) )
-                                              join newCont in content on existCont.Attribute( Helper.Attr_Include )?.Value.ToLower() equals newCont.Attribute( Helper.Attr_Include ).Value.ToLower()
-                                              select new { existingElement = existCont, newElement = newCont }).ToArray();
+                    var referenz = _projectFile.Descendants( Helper.GetXName( PTags.Reference ) ).
+                                         Where( s => s.Element( Helper.GetXName( PTags.HintPath ) ) != null ).
+                                         Select( s => new { element = s, hintPath = s.Element( Helper.GetXName( PTags.HintPath ) ).Value } );
 
-                    var resNewContent = content.Where( s => !resExistingContent.Any( t => t.newElement.Attribute( Helper.Attr_Include ).Value == s.Attribute( Helper.Attr_Include ).Value ) );
-
-                    foreach ( var item2 in resExistingContent )
+                    foreach (var item in linkObj)
                     {
-                        item2.existingElement.AddAfterSelf(item2.newElement);
-                        item2.existingElement.Remove();
+                        if (item.AddToOutput == false)
+                            continue;
+
+                        var content = item.Containers;
+                        hashProbing.Add(item.ProbingPath);
+
+                        var ref2ContentElements = from refs in referenz
+                                                  join con in content on refs.hintPath equals con.Attribute( Helper.Attr_Include )?.Value
+                                                  select new { referenzElement = refs.element, contentElement = con };
+
+                        // Set copy local to false
+                        foreach (var refItem in ref2ContentElements)
+                        {
+                            var ePrivate = refItem.referenzElement.Element( Helper.GetXName( PTags.Private ) );
+
+                            if (null == ePrivate)
+                            {
+                                refItem.referenzElement.Add(new XElement(Helper.GetXName(PTags.Private)) { Value = "False" });
+                            }
+                            else
+                            {
+                                ePrivate.Value = "False";
+                            }
+                        }
+
+                        var resExistingContent = (from existCont in _projectFile.Descendants( Helper.GetXName( PTags.Content ) )
+                                                  join newCont in content on existCont.Attribute( Helper.Attr_Include )?.Value.ToLower() equals newCont.Attribute( Helper.Attr_Include ).Value.ToLower()
+                                                  select new { existingElement = existCont, newElement = newCont }).ToArray();
+
+                        var resNewContent = content.Where( s => !resExistingContent.Any( t => t.newElement.Attribute( Helper.Attr_Include ).Value == s.Attribute( Helper.Attr_Include ).Value ) );
+
+                        foreach (var item2 in resExistingContent)
+                        {
+                            item2.existingElement.AddAfterSelf(item2.newElement);
+                            item2.existingElement.Remove();
+                        }
+
+                        foreach (var item2 in resNewContent)
+                        {
+                            xGrp.Add(item2);
+                        }
+
                     }
 
-                    foreach ( var item2 in resNewContent )
+                    _projectFile.Save(_theProjectFile.FullName);
+
+                    var cfgFile = new FileInfo( Path.Combine( _theProjectFile.DirectoryName, "app.config" ) );
+
+                    if (cfgFile.Exists)
                     {
-                        xGrp.Add(item2);
+                        Helper.BackUpFile(cfgFile);
+                        XDocument xdoc = XDocument.Load( cfgFile.FullName );
+                        Helper.AddProbing(xdoc, hashProbing.ToArray());
+                        xdoc.Save(cfgFile.FullName);
                     }
 
+                    SetupDialogData(_theProjectFile.FullName);
+
                 }
-
-                _projectFile.Save(_theProjectFile.FullName);
-
-                var cfgFile = new FileInfo( Path.Combine( _theProjectFile.DirectoryName, "app.config" ) );
-
-                if ( cfgFile.Exists )
-                {
-                    Helper.BackUpFile(cfgFile);
-                    XDocument xdoc = XDocument.Load( cfgFile.FullName );
-                    Helper.AddProbing(xdoc, hashProbing.ToArray());
-                    xdoc.Save(cfgFile.FullName);
-                }
-
-                SetupDialogData(_theProjectFile.FullName);
-
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show($"Error while safe data. Error {ex.Message}","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
         }
 
