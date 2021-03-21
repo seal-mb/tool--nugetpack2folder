@@ -66,8 +66,7 @@
             this.dateiToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(9, 3, 0, 3);
-            this.menuStrip1.Size = new System.Drawing.Size(1298, 35);
+            this.menuStrip1.Size = new System.Drawing.Size(865, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -79,13 +78,13 @@
             this.toolStripSeparator1,
             this.quitMenuItem});
             this.dateiToolStripMenuItem.Name = "dateiToolStripMenuItem";
-            this.dateiToolStripMenuItem.Size = new System.Drawing.Size(65, 29);
+            this.dateiToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.dateiToolStripMenuItem.Text = "&Datei";
             // 
             // openProjectFileToolStripMenuItem
             // 
             this.openProjectFileToolStripMenuItem.Name = "openProjectFileToolStripMenuItem";
-            this.openProjectFileToolStripMenuItem.Size = new System.Drawing.Size(230, 30);
+            this.openProjectFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openProjectFileToolStripMenuItem.Text = "Open Project File";
             this.openProjectFileToolStripMenuItem.Click += new System.EventHandler(this.OpenProjectFileToolStripMenuItem_Click);
             // 
@@ -93,19 +92,19 @@
             // 
             this.toolStripMenuItemSave.Enabled = false;
             this.toolStripMenuItemSave.Name = "toolStripMenuItemSave";
-            this.toolStripMenuItemSave.Size = new System.Drawing.Size(230, 30);
-            this.toolStripMenuItemSave.Text = "&Save";
+            this.toolStripMenuItemSave.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemSave.Text = "&Set Projekt File";
             this.toolStripMenuItemSave.Click += new System.EventHandler(this.ToolStripMenuItemSave_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(227, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // quitMenuItem
             // 
             this.quitMenuItem.Name = "quitMenuItem";
-            this.quitMenuItem.Size = new System.Drawing.Size(230, 30);
+            this.quitMenuItem.Size = new System.Drawing.Size(180, 22);
             this.quitMenuItem.Text = "&Quit";
             // 
             // statusStrip1
@@ -113,17 +112,16 @@
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabelFound});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 816);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 528);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Padding = new System.Windows.Forms.Padding(2, 0, 21, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(1298, 30);
+            this.statusStrip1.Size = new System.Drawing.Size(865, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabelFound
             // 
             this.toolStripStatusLabelFound.Name = "toolStripStatusLabelFound";
-            this.toolStripStatusLabelFound.Size = new System.Drawing.Size(63, 25);
+            this.toolStripStatusLabelFound.Size = new System.Drawing.Size(41, 17);
             this.toolStripStatusLabelFound.Text = "Empty";
             // 
             // splitContainerMain
@@ -132,8 +130,7 @@
             this.splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainerMain.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainerMain.IsSplitterFixed = true;
-            this.splitContainerMain.Location = new System.Drawing.Point(0, 35);
-            this.splitContainerMain.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.splitContainerMain.Location = new System.Drawing.Point(0, 24);
             this.splitContainerMain.Name = "splitContainerMain";
             this.splitContainerMain.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -148,17 +145,15 @@
             // splitContainerMain.Panel2
             // 
             this.splitContainerMain.Panel2.Controls.Add(this.splitContainerValues);
-            this.splitContainerMain.Size = new System.Drawing.Size(1298, 781);
+            this.splitContainerMain.Size = new System.Drawing.Size(865, 504);
             this.splitContainerMain.SplitterDistance = 100;
-            this.splitContainerMain.SplitterWidth = 6;
             this.splitContainerMain.TabIndex = 2;
             // 
             // buttonSetProbing
             // 
-            this.buttonSetProbing.Location = new System.Drawing.Point(436, 63);
-            this.buttonSetProbing.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.buttonSetProbing.Location = new System.Drawing.Point(291, 41);
             this.buttonSetProbing.Name = "buttonSetProbing";
-            this.buttonSetProbing.Size = new System.Drawing.Size(218, 35);
+            this.buttonSetProbing.Size = new System.Drawing.Size(145, 23);
             this.buttonSetProbing.TabIndex = 3;
             this.buttonSetProbing.Text = "Set all Items to this probing";
             this.buttonSetProbing.UseVisualStyleBackColor = true;
@@ -168,18 +163,16 @@
             // 
             this.comboBoxProbingVal.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxProbingVal.FormattingEnabled = true;
-            this.comboBoxProbingVal.Location = new System.Drawing.Point(99, 63);
-            this.comboBoxProbingVal.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxProbingVal.Location = new System.Drawing.Point(66, 41);
             this.comboBoxProbingVal.Name = "comboBoxProbingVal";
-            this.comboBoxProbingVal.Size = new System.Drawing.Size(326, 28);
+            this.comboBoxProbingVal.Size = new System.Drawing.Size(219, 21);
             this.comboBoxProbingVal.TabIndex = 2;
             // 
             // textBoxProbing
             // 
-            this.textBoxProbing.Location = new System.Drawing.Point(99, 22);
-            this.textBoxProbing.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.textBoxProbing.Location = new System.Drawing.Point(66, 14);
             this.textBoxProbing.Name = "textBoxProbing";
-            this.textBoxProbing.Size = new System.Drawing.Size(1105, 26);
+            this.textBoxProbing.Size = new System.Drawing.Size(738, 20);
             this.textBoxProbing.TabIndex = 1;
             this.textBoxProbing.Validating += new System.ComponentModel.CancelEventHandler(this.TextBoxProbing_Validating);
             this.textBoxProbing.Validated += new System.EventHandler(this.TextBoxProbing_Validated);
@@ -187,10 +180,9 @@
             // labelProbing
             // 
             this.labelProbing.AutoSize = true;
-            this.labelProbing.Location = new System.Drawing.Point(20, 25);
-            this.labelProbing.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelProbing.Location = new System.Drawing.Point(13, 16);
             this.labelProbing.Name = "labelProbing";
-            this.labelProbing.Size = new System.Drawing.Size(67, 20);
+            this.labelProbing.Size = new System.Drawing.Size(46, 13);
             this.labelProbing.TabIndex = 0;
             this.labelProbing.Text = "Probing:";
             // 
@@ -199,7 +191,6 @@
             this.splitContainerValues.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.splitContainerValues.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainerValues.Location = new System.Drawing.Point(0, 0);
-            this.splitContainerValues.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.splitContainerValues.Name = "splitContainerValues";
             // 
             // splitContainerValues.Panel1
@@ -209,9 +200,8 @@
             // splitContainerValues.Panel2
             // 
             this.splitContainerValues.Panel2.Controls.Add(this.detailsOfReferenz);
-            this.splitContainerValues.Size = new System.Drawing.Size(1296, 673);
-            this.splitContainerValues.SplitterDistance = 430;
-            this.splitContainerValues.SplitterWidth = 6;
+            this.splitContainerValues.Size = new System.Drawing.Size(863, 398);
+            this.splitContainerValues.SplitterDistance = 286;
             this.splitContainerValues.TabIndex = 0;
             // 
             // listViewReferenz
@@ -223,10 +213,9 @@
             this.listViewReferenz.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewReferenz.HideSelection = false;
             this.listViewReferenz.Location = new System.Drawing.Point(0, 0);
-            this.listViewReferenz.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.listViewReferenz.MultiSelect = false;
             this.listViewReferenz.Name = "listViewReferenz";
-            this.listViewReferenz.Size = new System.Drawing.Size(426, 669);
+            this.listViewReferenz.Size = new System.Drawing.Size(282, 394);
             this.listViewReferenz.TabIndex = 0;
             this.listViewReferenz.UseCompatibleStateImageBehavior = false;
             this.listViewReferenz.View = System.Windows.Forms.View.Details;
@@ -247,25 +236,24 @@
             // 
             this.detailsOfReferenz.Dock = System.Windows.Forms.DockStyle.Fill;
             this.detailsOfReferenz.Location = new System.Drawing.Point(0, 0);
-            this.detailsOfReferenz.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.detailsOfReferenz.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.detailsOfReferenz.Name = "detailsOfReferenz";
-            this.detailsOfReferenz.Size = new System.Drawing.Size(856, 669);
+            this.detailsOfReferenz.Size = new System.Drawing.Size(569, 394);
             this.detailsOfReferenz.TabIndex = 0;
             this.detailsOfReferenz.Visible = false;
             // 
             // MainFrm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1298, 846);
+            this.ClientSize = new System.Drawing.Size(865, 550);
             this.Controls.Add(this.splitContainerMain);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.MaximumSize = new System.Drawing.Size(1350, 905);
-            this.MinimumSize = new System.Drawing.Size(800, 600);
+            this.MaximumSize = new System.Drawing.Size(905, 602);
+            this.MinimumSize = new System.Drawing.Size(539, 404);
             this.Name = "MainFrm";
             this.Text = "Nuget to subfolder";
             this.menuStrip1.ResumeLayout(false);
