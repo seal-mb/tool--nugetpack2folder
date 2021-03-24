@@ -11,5 +11,11 @@
     <Setting Name="NugetKenner" Type="System.String" Scope="Application">
       <Value Profile="(Default)">\packages\</Value>
     </Setting>
+    <Setting Name="RemoveNugGrp" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RestoreNugetStyle" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

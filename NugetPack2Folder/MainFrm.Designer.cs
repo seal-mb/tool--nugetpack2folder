@@ -47,6 +47,9 @@
             this.columnHeaderPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderCopy = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.detailsOfReferenz = new NugetPack2Folder.DetailsOfReferenz();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxRemoveOldGrp = new System.Windows.Forms.CheckBox();
+            this.checkBoxRestoreNugetStyle = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
@@ -57,6 +60,7 @@
             this.splitContainerValues.Panel1.SuspendLayout();
             this.splitContainerValues.Panel2.SuspendLayout();
             this.splitContainerValues.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -66,7 +70,7 @@
             this.dateiToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(865, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(889, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -84,7 +88,7 @@
             // openProjectFileToolStripMenuItem
             // 
             this.openProjectFileToolStripMenuItem.Name = "openProjectFileToolStripMenuItem";
-            this.openProjectFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openProjectFileToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.openProjectFileToolStripMenuItem.Text = "Open Project File";
             this.openProjectFileToolStripMenuItem.Click += new System.EventHandler(this.OpenProjectFileToolStripMenuItem_Click);
             // 
@@ -92,19 +96,19 @@
             // 
             this.toolStripMenuItemSave.Enabled = false;
             this.toolStripMenuItemSave.Name = "toolStripMenuItemSave";
-            this.toolStripMenuItemSave.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemSave.Size = new System.Drawing.Size(164, 22);
             this.toolStripMenuItemSave.Text = "&Set Projekt File";
             this.toolStripMenuItemSave.Click += new System.EventHandler(this.ToolStripMenuItemSave_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(161, 6);
             // 
             // quitMenuItem
             // 
             this.quitMenuItem.Name = "quitMenuItem";
-            this.quitMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.quitMenuItem.Size = new System.Drawing.Size(164, 22);
             this.quitMenuItem.Text = "&Quit";
             // 
             // statusStrip1
@@ -112,9 +116,9 @@
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabelFound});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 528);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 579);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(865, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(889, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -136,17 +140,18 @@
             // 
             // splitContainerMain.Panel1
             // 
+            this.splitContainerMain.Panel1.Controls.Add(this.groupBox1);
             this.splitContainerMain.Panel1.Controls.Add(this.buttonSetProbing);
             this.splitContainerMain.Panel1.Controls.Add(this.comboBoxProbingVal);
             this.splitContainerMain.Panel1.Controls.Add(this.textBoxProbing);
             this.splitContainerMain.Panel1.Controls.Add(this.labelProbing);
-            this.splitContainerMain.Panel1MinSize = 10;
+            this.splitContainerMain.Panel1MinSize = 15;
             // 
             // splitContainerMain.Panel2
             // 
             this.splitContainerMain.Panel2.Controls.Add(this.splitContainerValues);
-            this.splitContainerMain.Size = new System.Drawing.Size(865, 504);
-            this.splitContainerMain.SplitterDistance = 100;
+            this.splitContainerMain.Size = new System.Drawing.Size(889, 555);
+            this.splitContainerMain.SplitterDistance = 125;
             this.splitContainerMain.TabIndex = 2;
             // 
             // buttonSetProbing
@@ -200,8 +205,8 @@
             // splitContainerValues.Panel2
             // 
             this.splitContainerValues.Panel2.Controls.Add(this.detailsOfReferenz);
-            this.splitContainerValues.Size = new System.Drawing.Size(863, 398);
-            this.splitContainerValues.SplitterDistance = 286;
+            this.splitContainerValues.Size = new System.Drawing.Size(887, 424);
+            this.splitContainerValues.SplitterDistance = 293;
             this.splitContainerValues.TabIndex = 0;
             // 
             // listViewReferenz
@@ -215,7 +220,7 @@
             this.listViewReferenz.Location = new System.Drawing.Point(0, 0);
             this.listViewReferenz.MultiSelect = false;
             this.listViewReferenz.Name = "listViewReferenz";
-            this.listViewReferenz.Size = new System.Drawing.Size(282, 394);
+            this.listViewReferenz.Size = new System.Drawing.Size(289, 420);
             this.listViewReferenz.TabIndex = 0;
             this.listViewReferenz.UseCompatibleStateImageBehavior = false;
             this.listViewReferenz.View = System.Windows.Forms.View.Details;
@@ -238,21 +243,53 @@
             this.detailsOfReferenz.Location = new System.Drawing.Point(0, 0);
             this.detailsOfReferenz.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.detailsOfReferenz.Name = "detailsOfReferenz";
-            this.detailsOfReferenz.Size = new System.Drawing.Size(569, 394);
+            this.detailsOfReferenz.Size = new System.Drawing.Size(586, 420);
             this.detailsOfReferenz.TabIndex = 0;
             this.detailsOfReferenz.Visible = false;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.checkBoxRestoreNugetStyle);
+            this.groupBox1.Controls.Add(this.checkBoxRemoveOldGrp);
+            this.groupBox1.Location = new System.Drawing.Point(471, 41);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(147, 67);
+            this.groupBox1.TabIndex = 5;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Nuget Otions";
+            // 
+            // checkBoxRemoveOldGrp
+            // 
+            this.checkBoxRemoveOldGrp.AutoSize = true;
+            this.checkBoxRemoveOldGrp.Location = new System.Drawing.Point(6, 19);
+            this.checkBoxRemoveOldGrp.Name = "checkBoxRemoveOldGrp";
+            this.checkBoxRemoveOldGrp.Size = new System.Drawing.Size(130, 17);
+            this.checkBoxRemoveOldGrp.TabIndex = 5;
+            this.checkBoxRemoveOldGrp.Text = "Remove &Nuget Group";
+            this.checkBoxRemoveOldGrp.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxRestoreNugetStyle
+            // 
+            this.checkBoxRestoreNugetStyle.AutoSize = true;
+            this.checkBoxRestoreNugetStyle.Location = new System.Drawing.Point(6, 43);
+            this.checkBoxRestoreNugetStyle.Name = "checkBoxRestoreNugetStyle";
+            this.checkBoxRestoreNugetStyle.Size = new System.Drawing.Size(121, 17);
+            this.checkBoxRestoreNugetStyle.TabIndex = 6;
+            this.checkBoxRestoreNugetStyle.Text = "Restore Nuget Style";
+            this.checkBoxRestoreNugetStyle.UseVisualStyleBackColor = true;
+            this.checkBoxRestoreNugetStyle.CheckedChanged += new System.EventHandler(this.checkBoxRestoreNugetStyle_CheckedChanged);
             // 
             // MainFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(865, 550);
+            this.ClientSize = new System.Drawing.Size(889, 601);
             this.Controls.Add(this.splitContainerMain);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.MaximumSize = new System.Drawing.Size(905, 602);
+            this.MaximumSize = new System.Drawing.Size(905, 640);
             this.MinimumSize = new System.Drawing.Size(539, 404);
             this.Name = "MainFrm";
             this.Text = "Nuget to subfolder";
@@ -269,6 +306,8 @@
             this.splitContainerValues.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerValues)).EndInit();
             this.splitContainerValues.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -294,6 +333,9 @@
         private System.Windows.Forms.ComboBox comboBoxProbingVal;
         private System.Windows.Forms.Button buttonSetProbing;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSave;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox checkBoxRestoreNugetStyle;
+        private System.Windows.Forms.CheckBox checkBoxRemoveOldGrp;
     }
 }
 
