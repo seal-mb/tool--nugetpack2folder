@@ -130,7 +130,7 @@
             this.Controls.Add(this.labelProbingPath);
             this.Controls.Add(this.checkBoxAddToOutput);
             this.Name = "DetailsOfReferenz";
-            this.Size = new System.Drawing.Size(529, 404);
+            this.Size = new System.Drawing.Size(525, 398);
             this.groupBoxElements.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

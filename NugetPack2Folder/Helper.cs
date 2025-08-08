@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -76,7 +77,10 @@ namespace NugetPack2Folder
         static public XNamespace XMLNS => _xmlns;
         static public XName GetXName(PTags enTag)
         {
-            return _xmlns + enTag.ToString();
+            var outTxt =_xmlns + enTag.ToString();
+
+           // Trace.WriteLine($"XName is {outTxt.ToString()}");
+            return outTxt;
         }
 
         static public XName GetXName(string name)

@@ -38,6 +38,9 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelFound = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxRestoreNugetStyle = new System.Windows.Forms.CheckBox();
+            this.checkBoxRemoveOldGrp = new System.Windows.Forms.CheckBox();
             this.buttonSetProbing = new System.Windows.Forms.Button();
             this.comboBoxProbingVal = new System.Windows.Forms.ComboBox();
             this.textBoxProbing = new System.Windows.Forms.TextBox();
@@ -47,20 +50,17 @@
             this.columnHeaderPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderCopy = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.detailsOfReferenz = new NugetPack2Folder.DetailsOfReferenz();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.checkBoxRemoveOldGrp = new System.Windows.Forms.CheckBox();
-            this.checkBoxRestoreNugetStyle = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
             this.splitContainerMain.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerValues)).BeginInit();
             this.splitContainerValues.Panel1.SuspendLayout();
             this.splitContainerValues.Panel2.SuspendLayout();
             this.splitContainerValues.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -116,7 +116,7 @@
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabelFound});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 579);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 589);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(889, 22);
             this.statusStrip1.TabIndex = 1;
@@ -150,9 +150,41 @@
             // splitContainerMain.Panel2
             // 
             this.splitContainerMain.Panel2.Controls.Add(this.splitContainerValues);
-            this.splitContainerMain.Size = new System.Drawing.Size(889, 555);
+            this.splitContainerMain.Size = new System.Drawing.Size(889, 565);
             this.splitContainerMain.SplitterDistance = 125;
             this.splitContainerMain.TabIndex = 2;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.checkBoxRestoreNugetStyle);
+            this.groupBox1.Controls.Add(this.checkBoxRemoveOldGrp);
+            this.groupBox1.Location = new System.Drawing.Point(471, 41);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(147, 67);
+            this.groupBox1.TabIndex = 5;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Nuget Otions";
+            // 
+            // checkBoxRestoreNugetStyle
+            // 
+            this.checkBoxRestoreNugetStyle.AutoSize = true;
+            this.checkBoxRestoreNugetStyle.Location = new System.Drawing.Point(6, 43);
+            this.checkBoxRestoreNugetStyle.Name = "checkBoxRestoreNugetStyle";
+            this.checkBoxRestoreNugetStyle.Size = new System.Drawing.Size(121, 17);
+            this.checkBoxRestoreNugetStyle.TabIndex = 6;
+            this.checkBoxRestoreNugetStyle.Text = "Restore Nuget Style";
+            this.checkBoxRestoreNugetStyle.UseVisualStyleBackColor = true;
+            this.checkBoxRestoreNugetStyle.CheckedChanged += new System.EventHandler(this.checkBoxRestoreNugetStyle_CheckedChanged);
+            // 
+            // checkBoxRemoveOldGrp
+            // 
+            this.checkBoxRemoveOldGrp.AutoSize = true;
+            this.checkBoxRemoveOldGrp.Location = new System.Drawing.Point(6, 19);
+            this.checkBoxRemoveOldGrp.Name = "checkBoxRemoveOldGrp";
+            this.checkBoxRemoveOldGrp.Size = new System.Drawing.Size(130, 17);
+            this.checkBoxRemoveOldGrp.TabIndex = 5;
+            this.checkBoxRemoveOldGrp.Text = "Remove &Nuget Group";
+            this.checkBoxRemoveOldGrp.UseVisualStyleBackColor = true;
             // 
             // buttonSetProbing
             // 
@@ -205,7 +237,7 @@
             // splitContainerValues.Panel2
             // 
             this.splitContainerValues.Panel2.Controls.Add(this.detailsOfReferenz);
-            this.splitContainerValues.Size = new System.Drawing.Size(887, 424);
+            this.splitContainerValues.Size = new System.Drawing.Size(887, 434);
             this.splitContainerValues.SplitterDistance = 293;
             this.splitContainerValues.TabIndex = 0;
             // 
@@ -220,7 +252,7 @@
             this.listViewReferenz.Location = new System.Drawing.Point(0, 0);
             this.listViewReferenz.MultiSelect = false;
             this.listViewReferenz.Name = "listViewReferenz";
-            this.listViewReferenz.Size = new System.Drawing.Size(289, 420);
+            this.listViewReferenz.Size = new System.Drawing.Size(289, 430);
             this.listViewReferenz.TabIndex = 0;
             this.listViewReferenz.UseCompatibleStateImageBehavior = false;
             this.listViewReferenz.View = System.Windows.Forms.View.Details;
@@ -243,53 +275,21 @@
             this.detailsOfReferenz.Location = new System.Drawing.Point(0, 0);
             this.detailsOfReferenz.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.detailsOfReferenz.Name = "detailsOfReferenz";
-            this.detailsOfReferenz.Size = new System.Drawing.Size(586, 420);
+            this.detailsOfReferenz.Size = new System.Drawing.Size(586, 430);
             this.detailsOfReferenz.TabIndex = 0;
             this.detailsOfReferenz.Visible = false;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.checkBoxRestoreNugetStyle);
-            this.groupBox1.Controls.Add(this.checkBoxRemoveOldGrp);
-            this.groupBox1.Location = new System.Drawing.Point(471, 41);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(147, 67);
-            this.groupBox1.TabIndex = 5;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Nuget Otions";
-            // 
-            // checkBoxRemoveOldGrp
-            // 
-            this.checkBoxRemoveOldGrp.AutoSize = true;
-            this.checkBoxRemoveOldGrp.Location = new System.Drawing.Point(6, 19);
-            this.checkBoxRemoveOldGrp.Name = "checkBoxRemoveOldGrp";
-            this.checkBoxRemoveOldGrp.Size = new System.Drawing.Size(130, 17);
-            this.checkBoxRemoveOldGrp.TabIndex = 5;
-            this.checkBoxRemoveOldGrp.Text = "Remove &Nuget Group";
-            this.checkBoxRemoveOldGrp.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxRestoreNugetStyle
-            // 
-            this.checkBoxRestoreNugetStyle.AutoSize = true;
-            this.checkBoxRestoreNugetStyle.Location = new System.Drawing.Point(6, 43);
-            this.checkBoxRestoreNugetStyle.Name = "checkBoxRestoreNugetStyle";
-            this.checkBoxRestoreNugetStyle.Size = new System.Drawing.Size(121, 17);
-            this.checkBoxRestoreNugetStyle.TabIndex = 6;
-            this.checkBoxRestoreNugetStyle.Text = "Restore Nuget Style";
-            this.checkBoxRestoreNugetStyle.UseVisualStyleBackColor = true;
-            this.checkBoxRestoreNugetStyle.CheckedChanged += new System.EventHandler(this.checkBoxRestoreNugetStyle_CheckedChanged);
             // 
             // MainFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(889, 601);
+            this.ClientSize = new System.Drawing.Size(889, 611);
             this.Controls.Add(this.splitContainerMain);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.MaximumSize = new System.Drawing.Size(905, 640);
+            this.MaximumSize = new System.Drawing.Size(905, 650);
             this.MinimumSize = new System.Drawing.Size(539, 404);
             this.Name = "MainFrm";
             this.Text = "Nuget to subfolder";
@@ -302,12 +302,12 @@
             this.splitContainerMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).EndInit();
             this.splitContainerMain.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.splitContainerValues.Panel1.ResumeLayout(false);
             this.splitContainerValues.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerValues)).EndInit();
             this.splitContainerValues.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

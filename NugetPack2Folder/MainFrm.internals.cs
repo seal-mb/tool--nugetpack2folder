@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,8 @@ namespace NugetPack2Folder
         private void SetupDialogData (string fiName)
         {
 
+            Trace.WriteLine($"Load projekt file {fiName}");
+
             _projectFile = XDocument.Load(fiName, LoadOptions.None);
             _theProjectFile = new FileInfo(fiName);
             Properties.Settings.Default.LastLocation = _theProjectFile.DirectoryName;
@@ -25,6 +28,7 @@ namespace NugetPack2Folder
                                                          .Any( t => (t.Value?.ToLower().Contains( Helper.SearchNugetPack )).GetValueOrDefault( false ) ) );
 
             toolStripStatusLabelFound.Text = $"Found {res.Count()} items!";
+            Trace.WriteLine(toolStripStatusLabelFound.Text);
 
             _lstRef.Clear();
             _lstRef.AddRange(res);
